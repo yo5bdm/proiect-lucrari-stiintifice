@@ -14,6 +14,7 @@ class App {
     public $post=null;
     public $settings;
     public $user;
+    public $mesaj;
     
     private $havePost;
     
@@ -30,10 +31,8 @@ class App {
     }
     
     private function __construct() {
-        session_start();
         $this->settings = new Settings();
-        $user = new User;
-        User::get();
+        $this->user = User::get();
     }
     
     public function run() {
@@ -47,7 +46,7 @@ class App {
         } else {
             $this->action = $this->settings->defaultRute['action'];
         }
-        if(isset($_POST)) {
+        if(count($_POST)>0) {
             $this->havePost = true;
             $this->post = $_POST;
         } else {

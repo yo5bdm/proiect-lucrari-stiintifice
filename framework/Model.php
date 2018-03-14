@@ -8,12 +8,16 @@
 
 abstract class Model {
     
-    private $data;
-    private $class;
+    protected $data;
+    protected $class;
     
     public function __construct() {
         $this->class = get_class($this);
         $this->data = $this->loadFile($this->class);
+    }
+    
+    public function __destruct() {
+        $this->saveData();
     }
 
     private function loadFile($file) {
@@ -31,9 +35,11 @@ abstract class Model {
     }
     
     public abstract function insertData($data);
-    
+    protected abstract function getID();
+
+
     public function saveData() {
-        file_put_contents('db'.DS.$file.".json", $data);
+        file_put_contents('db'.DS.$this->class.".json", json_encode($this->data));
     }
     
     public function getFields() {

@@ -1,21 +1,11 @@
 <?php
-define("DS","/");
+if(!session_start([
+    'cookie_lifetime' => 86400,
+])) die("Nu se poate crea sesiunea");
+if (!is_writable(session_save_path())) {
+    die('Session path "'.session_save_path().'" is not writable for PHP!'); 
+}
+require_once 'framework/Autoload.php';
 error_reporting(E_ALL);
-spl_autoload_register(function ($className) {
-    $dirs = array(
-        'framework',
-        'controllers',
-        'models',
-        'settings'
-    );
-    foreach($dirs as $directory) {
-        $file = $directory.DS.$className.".php";
-        if(file_exists($file)) {
-            require_once($file);
-            return true;
-        }
-    }  
-    return false;    
-});
-
 App::create();
+//https://stackoverflow.com/questions/8976930/php-session-not-saving

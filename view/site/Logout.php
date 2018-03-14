@@ -6,14 +6,3 @@
  * and open the template in the editor.
  */
 
-class Date extends Model {
-    
-    public function insertData($data) {
-        
-    }
-
-    protected function getID() {
-        
-    }
-
-}

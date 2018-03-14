@@ -31,4 +31,13 @@ class View {
     public function setTitle($tit) {
         $this->title = $tit;
     }
+    
+    public function mesaj() {
+        if(isset($_SESSION['mesaj'])){
+            $mesaj = $_SESSION['mesaj'];
+            unset($_SESSION['mesaj']);
+            return '<div class="alert alert-warning" role="alert">'.$mesaj.'</div>';
+        }
+        return "";
+    }
 }

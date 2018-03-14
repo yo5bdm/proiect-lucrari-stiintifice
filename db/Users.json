@@ -1,5 +1,1 @@
-{"Users":[
-    {"id":0,"username":"admin","password":"admin","name":"Admin","group":""},
-    {"id":1,"username":"vasile","password":"admin","name":"Vasile Vasilescu","group":""},
-    {"id":2,"username":"mihai","password":"admin","name":"Misu Mihaescu","group":""}
-]}
+{"Users":[{"username":"yo5bdm","password":"123","email":"yo5bdm@gmail.com","name":"Erdei Rudolf","group":"","admin":false,"id":1}]}

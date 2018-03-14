@@ -9,6 +9,7 @@
                 <form ng-app="myApp" ng-controller="myCtrl" action="" method="POST">
                     <p><input type="text" name="name" placeholder="Numele si prenumele" class="form-control"/></p>
                     <p><input type="text" name="username" placeholder="Numele de utilizator" class="form-control"/></p>
+                    <p><input type="text" name="email" placeholder="Adresa de email" class="form-control"/></p>
                     <p><input type="password" ng-model="password" name="password" placeholder="Parola" class="form-control"/></p>
                     <p><input type="password" ng-model="passverify" name="passwordVerify" placeholder="Verificare Parola" class="form-control"/></p>
                     <p>{{eroare}}</p>

@@ -17,7 +17,7 @@
     <title><?=$this->title?></title>
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -30,20 +30,34 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-              <?php foreach(App::$app->settings->meniu as $text => $link): ?>
+              <?php if(App::$app->user->isLoggedIn()): ?>
+              <?php foreach(App::$app->settings->meniuLogat as $text => $link): ?>
               <li><a href="<?=Helpers::generateUrl($link)?>"><?=ucfirst($text)?></a></li>
               <?php endforeach; ?>
+              <li><a href="<?=Helpers::generateUrl(["c"=>"site","a"=>"profil"])?>"><?=App::$app->user->getName()?></a></li>
+              <?php else: ?>
+              <?php foreach(App::$app->settings->meniuVizitator as $text => $link): ?>
+              <li><a href="<?=Helpers::generateUrl($link)?>"><?=ucfirst($text)?></a></li>
+              <?php endforeach; ?>
+              <?php endif; ?>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
     
     <div class="container">
+        <?=$this->mesaj()?>
         <?=$this->content?>
         <hr>
-        <footer class="text-center"><strong><?=App::$app->settings->numeAplicatie?></strong>, Autori: <?=App::$app->settings->autori?></footer>
+        <footer class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+                <p class="text-muted" style="padding-top: 17px;">Autori: <?=App::$app->settings->autori?></p>
+            </div>
+        </footer>
     </div>
-    
+<!--    <pre>
+        <?php //print_r($_SESSION); ?>
+    </pre>-->
 </body>
 
 </html>

@@ -26,9 +26,16 @@ class Settings {
         "action"=>"index"
     );
     
-    public $meniu = array(
+    public $meniuVizitator = array(
         "Acasa" => ["c"=>"site","a"=>"index"],
-        "Adauga Lucrare"=>["c"=>"lucrari","a"=>"add"]
+        "Login"=>["c"=>"site","a"=>"login"],
+        "Inregistrare"=>["c"=>"site","a"=>"register"],
+    );
+    
+    public $meniuLogat = array(
+        "Acasa" => ["c"=>"site","a"=>"index"],
+        "Adauga Lucrare"=>["c"=>"lucrari","a"=>"add"],
+        "Logout" => ["c"=>"site","a"=>"logout"]
     );
     
     public function printCssFiles() {

@@ -20,4 +20,13 @@ class Controller {
     public function __destruct() {
         $this->view->generate();
     }
+    
+    public function redirect($to) {
+        $url = App::$app->settings->url.DS.App::$app->settings->index."?c=".$to['c']."&a=".$to['a'];
+        header('Location: '.$url);
+    }
+    
+    public function alert($mesaj) {
+        $_SESSION['mesaj'] = $mesaj;
+    }
 }

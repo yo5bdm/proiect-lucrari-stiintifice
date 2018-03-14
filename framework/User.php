@@ -20,28 +20,24 @@ class User {
     }
     
     public static function get() {
+        $user = new User;
         if(isset($_SESSION['user'])) {
-            App::$app->user->detalii(
+            $user = new User();
+            $user->detalii(
                     $_SESSION['user']['id'],
                     $_SESSION['user']['name'],
                     $_SESSION['user']['username'],
                     $_SESSION['user']['group'],
                     $_SESSION['user']['admin']
             );
-            App::$app->user->loggedIn = true;
-        } else {
-            @User::logout();
-        }
+            $user->loggedIn = true;
+        } 
+        return $user;
     }
     
     public static function logout() {
-        App::$app->user->id = "";
-        App::$app->user->name = "";
-        App::$app->user->username = "";
-        App::$app->user->group = "";
-        App::$app->user->admin = "";
-        App::$app->user->loggedIn = false;
-        session_destroy();
+        session_unset(); 
+        session_destroy(); 
     }
     
     private $name;
@@ -50,6 +46,14 @@ class User {
     private $id;
     private $group;
     private $loggedIn=false;
+    
+    public function __construct() {
+        $this->loggedIn=false;
+    }
+    
+    public function isLoggedIn() {
+        return $this->loggedIn;
+    }
     
     public function detalii($id,$name,$username,$group,$admin) {
         $this->id = $id;
@@ -79,6 +83,5 @@ class User {
     public function getGroup() {
         return $this->group;
     }
-
 
 }
