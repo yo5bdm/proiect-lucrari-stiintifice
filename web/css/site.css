@@ -1,0 +1,13 @@
+/* 
+    Created on : Mar 14, 2018, 8:37:50 AM
+    Author     : yo5bdm
+*/
+
+body { 
+    padding-top: 65px; 
+}
+
+.tabele {
+    border-collapse: collapse;
+    border: 2px solid black;
+}
