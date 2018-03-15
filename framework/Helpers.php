@@ -7,7 +7,6 @@
  */
 
 class Helpers {
-    
     public static function table($data,$displayRows) {
         $ret = "<table class='table'><tr>";
         foreach($data['fields'] as $field) {
@@ -27,6 +26,10 @@ class Helpers {
     
     public static function generateUrl($url) {
         return App::$app->settings->url.DS.App::$app->settings->index."?c=".$url['c']."&a=".$url['a'];
+    }
+    
+    public static function a($url,$text) {
+        return "<a href='" . Helpers::generateUrl($url) . "' >".$text."</a>";
     }
     
 }

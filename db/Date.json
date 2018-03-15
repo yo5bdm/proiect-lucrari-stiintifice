@@ -1,10 +1,1 @@
-{"Date":[
-    {"lucrari":[
-        {"titlu":"","autori":[],"abstract":"","volum":"","pagini":"","conferinta":"","anulPublicarii":"","link":"","linkLocal":"","citari":[],"bibliografie":[]}
-    ]},
-    {"departamente":[
-        {"Mate-Info":[
-            {"grupuri":[]}
-        ]}
-    ]}
-]}
+{"Date":{"Lucrari":[{"id":1,"titlu":"Fizica pamantului","autori":[],"abstract":"O lucrare despre fizica","volum":"Lucrarile abstracte","pagini":"210 - 220","conferinta":"","anulPublicarii":"2018","link":"faraLink","linkLocal":"","citari":[],"bibliografie":[]},{"id":2,"titlu":"Despre PHP","autori":[],"abstract":"Lucrarea noastra vorbeste despre un limbaj de programare","volum":"Lucrarile abstracte","pagini":"210 - 220","conferinta":"","anulPublicarii":"2018","link":"faraLink","linkLocal":"","citari":[],"bibliografie":[]},{"id":3,"titlu":"Ana are mere","autori":[1],"abstract":"O sinteza verde a tuturor promisiunilor desarte din toate abstractele lumii","volum":"56","pagini":"65-66","conferinta":"","anulPublicarii":"2018","link":"","linkLocal":"","citari":[],"bibliografie":[]}],"Departamente":[{"Mate-Info":[{"grupuri":[]}]}]}}

@@ -10,26 +10,38 @@ class View {
     public $data;
     public $content;
     public $title;
+    private $json;
+    
+    private $viewFolder;
     
     public function __construct() {
         $this->title = ucfirst(App::$app->settings->numeAplicatie)." - ".ucfirst(App::$app->controller)." > ".ucfirst(App::$app->action);
+        @$this->viewFolder = dirname(__FILE__,2) . "view";
+        $this->json = false;
     }
     
     public function generate() {
-        $viewFile = "view".DS.App::$app->controller.DS.App::$app->action.".php";
-        ob_start();
-        include($viewFile);
-        $this->content = ob_get_contents();
-        ob_end_clean();
-        require_once('view'.DS.App::$app->settings->layout);
+        if(!$this->json) {
+            $viewFile = $this->viewFolder.DS.App::$app->controller.DS.App::$app->action.".php";
+            ob_start();
+            include($viewFile);
+            $this->content = ob_get_contents();
+            ob_end_clean();
+            require_once('view'.DS.App::$app->settings->layout);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode($this->data);
+        }
+        
     }
     
-    public function setData($cont) {
+    public function setData($cont,$json) {
         $this->data = $cont;
+        $this->json = $json;
     }
     
     public function setTitle($tit) {
-        $this->title = $tit;
+        $this->title = ucfirst(App::$app->settings->numeAplicatie)." - ".$tit;
     }
     
     public function mesaj() {
@@ -39,5 +51,15 @@ class View {
             return '<div class="alert alert-warning" role="alert">'.$mesaj.'</div>';
         }
         return "";
+    }
+    
+    public function error404() {
+        $this->setTitle("Eroare");
+        $viewFile = $this->viewFolder.DS."error404.php";
+        ob_start();
+        include($viewFile);
+        $this->content = ob_get_contents();
+        ob_end_clean();
+        require_once('view'.DS.App::$app->settings->layout);
     }
 }

@@ -12,8 +12,21 @@ class Date extends Model {
         
     }
 
-    protected function getID() {
+    protected function getID() { //returneaza urmatorul ID, pentru inserare
         
     }
-
+    
+    
+    public function getListaLucrari() {
+        //print_r($this->data);
+        return $this->data['Date']['Lucrari']; //['Lucrari']
+    }
+    
+    public function getListaDepartamente() {
+        return $this->data['Date']['Departamente'];
+    }
+    
+    public function salveazaLucrarea($lucrare) {
+        array_push($this->data['Date']['Lucrari'], $lucrare->asArray());
+    }
 }

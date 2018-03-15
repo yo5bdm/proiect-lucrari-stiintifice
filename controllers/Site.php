@@ -8,13 +8,16 @@
 
 class Site extends Controller {
     
-    public function index() {
-        $useri = new Users();
-        $data['users'] = $useri->getDataForTable();
-        $this->setData($data);
+    public $permissions = array( //metodele protejate prin login;
+        'logout'
+    );
+    
+    protected function index() {
+        
+        //descrierea aplicatiei
     }
     
-    public function login() {
+    protected function login() {
         if(App::$app->isPost()) { 
             $userModel = new Users();
             $user = $userModel->verificare(App::$app->post['username'],App::$app->post['password']);
@@ -26,12 +29,12 @@ class Site extends Controller {
         }
     }
     
-    public function logout() {
+    protected function logout() {
         User::logout();
         $this->redirect(["c"=>"site","a"=>"index"]);
     }
     //{"id":0,"username":"admin","password":"admin","name":"Admin","group":""},
-    public function register() {
+    protected function register() {
         $userModel = new Users();
         if(App::$app->isPost()) {
             $user = array(

@@ -5,9 +5,5 @@
 
 body { 
     padding-top: 65px; 
-}
-
-.tabele {
-    border-collapse: collapse;
-    border: 2px solid black;
+    padding-bottom: 65px;
 }

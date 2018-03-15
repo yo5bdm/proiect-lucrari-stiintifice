@@ -34,6 +34,7 @@ class Settings {
     
     public $meniuLogat = array(
         "Acasa" => ["c"=>"site","a"=>"index"],
+        "Lista lucrari" => ["c"=>"lucrari","a"=>"index"],
         "Adauga Lucrare"=>["c"=>"lucrari","a"=>"add"],
         "Logout" => ["c"=>"site","a"=>"logout"]
     );
