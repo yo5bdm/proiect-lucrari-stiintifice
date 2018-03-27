@@ -7,22 +7,11 @@
  */
 
 class App {
+    // ------------------------ STATIC ---------------------------------
+    
     public static $app=null;
     
-    public $controller=null;
-    public $action=null;
-    public $post=null;
-    public $settings;
-    public $user;
-    public $mesaj;
-    
-    private $havePost;
-    
-    public function isPost() {
-        return $this->havePost;
-    }
-
-    public static function create() {
+    public static function create() { //singleton create
         if(App::$app != null) {
             die("Nu se poate crea decat un singur obiect al clasei App.");
         }
@@ -30,35 +19,36 @@ class App {
         App::$app->run();
     }
     
+    // ----------------------- NESTATIC --------------------------------
+    public $route;
+    public $post=null;
+    public $settings;
+    public $user;
+    public $mesaj;
+    
+    private $havePost=false;
+    
     private function __construct() {
         $this->settings = new Settings();
-        $this->user = User::get();
+        $this->user = Loggeduser::get();
     }
     
     public function run() {
-        if(isset($_GET['c'])) {
-            $this->controller = $_GET['c'];
-        } else {
-            $this->controller = $this->settings->defaultRute['controller'];
-        }
-        if(isset($_GET['a'])) {
-            $this->action = $_GET['a'];
-        } else {
-            $this->action = $this->settings->defaultRute['action'];
-        }
+        $this->route = new Route();
         if(count($_POST)>0) {
             $this->havePost = true;
             $this->post = $_POST;
         } else {
             $this->havePost = false;
         }
-        if($this->action == null) {
-            $this->action = 'index';
-        }
-        if($this->controller != null) {
-            $contr = new $this->controller();
-            $ac = $this->action;
-            $contr->$ac();
-        }
+        
+        $contr = new $this->route->controller(); //instantiaza controllerul selectat
+        $ac = $this->route->action;
+        $contr->$ac($this->route->id,$this->route->parametrii); //executa actiunea selectata
+        
+    }
+    
+    public function isPost() {
+        return $this->havePost;
     }
 }

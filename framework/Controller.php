@@ -10,6 +10,7 @@ class Controller {
     private $view;
     private $error404;
     public $json = false;
+    public $admin = false;
     protected $permissions=array(); //
     
     public function __construct() {
@@ -29,7 +30,11 @@ class Controller {
     }
     
     protected function checkPermissions($method) {
-        return true;
+        //return true;
+        if($this->admin==true){
+            if(App::$app->user->isAdmin()==true) return true;
+            else return false;
+        }
         if(count($this->permissions)>0 && in_array($method, $this->permissions)) { //daca e in array, e protejat
             if(App::$app->user->isLoggedIn()) return true;
             else return false;
@@ -46,7 +51,8 @@ class Controller {
     }
     
     public function redirect($to) {
-        $url = App::$app->settings->url.DS.App::$app->settings->index."?c=".$to['c']."&a=".$to['a'];
+        //$url = App::$app->settings->url.DS.App::$app->settings->index."?c=".$to['c']."&a=".$to['a'];
+        $url = Helpers::generateUrl($to);
         header('Location: '.$url);
     }
     

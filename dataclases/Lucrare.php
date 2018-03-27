@@ -5,23 +5,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-class Lucrare {
+class Lucrare extends Object {
     private $id;
-    private $titlu;
-    private $autori=array();
-    private $abstract;
-    private $volum;
-    private $pagini;
-    private $conferinta;
-    private $anulPublicarii;
-    private $link;
-    private $linkLocal;
-    private $citari=array();
-    private $bibliografie=array();
+    public $titlu;
+    public $autori=array();
+    public $abstract;
+    public $volum;
+    public $pagini;
+    public $conferinta;
+    public $anulPublicarii;
+    public $link;
+    public $linkLocal;
+    public $citari=array();
+    public $bibliografie=array();
     
-    public function __construct( //constructor de creare element nou
-            $titlu, $abstract, $volum, $pagini, 
-            $conferinta, $anulPublicarii, $link, $linkLocal
+    public function creare(
+                $titlu, $abstract, $volum, $pagini, 
+                $conferinta, $anulPublicarii, $link, $linkLocal
             ) {
         $this->titlu = $titlu;
         $this->abstract = $abstract;
@@ -31,19 +31,25 @@ class Lucrare {
         $this->anulPublicarii = $anulPublicarii;
         $this->link = $link;
         $this->linkLocal = $linkLocal;
-        array_push($this->autori,App::$app->user->getId());
+        array_push($this->autori,["id"=>App::$app->user->getId(),"nume"=>App::$app->user->getName()]);
     }
     
-    
+    public function set($id,$titlu,$autori,$abstract,$volum,$pagini,$conferinta,$anulPublicarii,$link,$linkLocal,$citari,$bibliografie) {
+        $this->id = $id;
+        $this->titlu = $titlu;
+        $this->autori = $autori;
+        $this->abstract = $abstract;
+        $this->volum = $volum;
+        $this->pagini = $pagini;
+        $this->conferinta = $conferinta;
+        $this->anulPublicarii = $anulPublicarii;
+        $this->link = $link;
+        $this->linkLocal = $linkLocal;
+        $this->citari = $citari;
+        $this->bibliografie = $bibliografie;
+    }
 
-    public function asArray() {
-        $vars = get_class_vars(get_class($this));
-        $ret = array();
-        foreach($vars as $nume => $valoare) {
-            $ret[$nume] = $this->$nume;
-        }
-        return $ret;
-    }
+    
     
     public function addAutor($id) {
         aray_push($this->autori,$id);
@@ -55,5 +61,12 @@ class Lucrare {
     
     public function addBibliografie($txt) {
         aray_push($this->bibliografie,$txt);
+    }
+    
+    public function getID() {
+        return $this->id;
+    }
+    public function setID($id) {
+        $this->id = $id;
     }
 }

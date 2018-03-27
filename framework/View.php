@@ -15,14 +15,14 @@ class View {
     private $viewFolder;
     
     public function __construct() {
-        $this->title = ucfirst(App::$app->settings->numeAplicatie)." - ".ucfirst(App::$app->controller)." > ".ucfirst(App::$app->action);
+        $this->title = ucfirst(App::$app->settings->numeAplicatie)." - ".ucfirst(App::$app->route->controller)." > ".ucfirst(App::$app->route->action);
         @$this->viewFolder = dirname(__FILE__,2) . "view";
         $this->json = false;
     }
     
     public function generate() {
         if(!$this->json) {
-            $viewFile = $this->viewFolder.DS.App::$app->controller.DS.App::$app->action.".php";
+            $viewFile = $this->viewFolder.DS.App::$app->route->controller.DS.App::$app->route->action.".php";
             ob_start();
             include($viewFile);
             $this->content = ob_get_contents();

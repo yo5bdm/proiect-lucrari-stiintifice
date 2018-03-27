@@ -21,8 +21,9 @@ class Site extends Controller {
         if(App::$app->isPost()) { 
             $userModel = new Users();
             $user = $userModel->verificare(App::$app->post['username'],App::$app->post['password']);
+            print_r($user);
             if($user!=false) {
-                User::login($user['id'], $user['name'], $user['username'], $user['group'], $user['admin']);
+                Loggeduser::login($user);
                 $this->redirect(["c"=>"site","a"=>"index"]);
             }
             $this->alert("Datele introduse nu sunt corecte!");
@@ -30,22 +31,16 @@ class Site extends Controller {
     }
     
     protected function logout() {
-        User::logout();
+        Loggeduser::logout();
         $this->redirect(["c"=>"site","a"=>"index"]);
     }
     //{"id":0,"username":"admin","password":"admin","name":"Admin","group":""},
     protected function register() {
         $userModel = new Users();
         if(App::$app->isPost()) {
-            $user = array(
-                'username'=>App::$app->post['username'],
-                'password'=>App::$app->post['password'],
-                'email'=>App::$app->post['email'],
-                'name'=>App::$app->post['name'],
-                'group'=>"",
-                'admin'=>false
-            );
-            if($userModel->insertData($user)) {
+            $user = new User();
+            $user->fromPost();
+            if($userModel->insertData($user->asArray())) {
                 $this->alert("Utilizatorul a fost salvat, va rugam sa va logati");
                 $this->redirect(["c"=>"site","a"=>"login"]);
             } else {

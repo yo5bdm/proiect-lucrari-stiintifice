@@ -8,18 +8,33 @@
 
 class Date extends Model {
     
-    public function insertData($data) {
-        
-    }
+    private $userId=null;
 
-    protected function getID() { //returneaza urmatorul ID, pentru inserare
-        
+    protected function getNextLucrareID() { //returneaza urmatorul ID, pentru inserare
+        $id = 0;
+        foreach($this->data['Date']['Lucrari'] as $lucrare) {
+            if($lucrare['id']>$id) {
+                $id = $lucrare['id'];
+            }
+        }
+        return $id+1;
     }
     
     
     public function getListaLucrari() {
-        //print_r($this->data);
-        return $this->data['Date']['Lucrari']; //['Lucrari']
+        if($this->userId != null) {
+            //filtreaza dupa id
+            $lucrari = array();
+            foreach($this->data['Date']['Lucrari'] as $lucrare) {
+                foreach($lucrare['autori'] as $autor) {
+                    if($autor == $this->userId) {
+                        array_push($lucrari, $lucrare);
+                    }
+                }
+            }
+            return $lucrari;
+        }
+        return $this->data['Date']['Lucrari'];
     }
     
     public function getListaDepartamente() {
@@ -27,6 +42,25 @@ class Date extends Model {
     }
     
     public function salveazaLucrarea($lucrare) {
+        $lucrare->setID($this->getID());
         array_push($this->data['Date']['Lucrari'], $lucrare->asArray());
     }
+    
+    public function userID($id) {
+        $this->userId = $id;
+        return $this;
+    }
+
+    protected function getID() {
+        $id = 0;
+        foreach($this->data['Date']['Lucrari'] as $lucrare) {
+            if($lucrare['id'] > $id) $id = $lucrare['id'];
+        }
+        return $id+1;
+    }
+
+    public function insertData($data) {
+        //unused
+    }
+
 }
