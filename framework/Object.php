@@ -9,6 +9,7 @@
 class Object {
     
     public function getSettings($text) {
+        if(!isset($this->settings)) return NULL;
         if(array_key_exists($text,$this->settings)) {
             return $this->settings[$text];
         } else return NULL;

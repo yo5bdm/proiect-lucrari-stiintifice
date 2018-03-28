@@ -20,6 +20,7 @@
                     <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
                     <p>Anul publicarii {{x.anulPublicarii}}; {{getText(x.volum,'Vol:')}}, {{getText(x.pagini,'Pag:')}}</p>
                     <p>{{getText(x.conferinta,'Conferinta:')}}</p>
+                    <p>Citat de {{x.citari.length}} ori</p>
                     <p><a href='{{x.link}}'>Link</a>; <a href='{{x.linkLocal}}'>Link local</a></p>
                 </div>
             </li>
@@ -43,6 +44,15 @@
             <p>{{getText(md.volum,'Volumul')}} {{getText(md.pagini,'Pag')}}</p>
             <p>Publicat in {{md.anulPublicarii}}</p>
             <p>{{getText(md.conferinta,'Conferinta')}}</p>
+            <p>Citări:</p>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="c in md.citari">
+                        {{c.descriere}}, 
+                        {{c.an}}, 
+                        <a href="{{c.urlLocal}}">Link Local</a> 
+                        <a href="{{c.urlRemote}}">Link Remote</a>
+                    </li>
+                </ul>
             <p><a href='{{md.link}}'>Link</a>; <a href='{{md.linkLocal}}'>Link local</a></p>
         </div>
         <div class="modal-footer">

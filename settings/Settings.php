@@ -43,9 +43,11 @@ class Settings {
     );
     
     public $traducere = array(
-        'username' => 'Nume de utilizator',
-        'group' => 'Grup',
-        'password' => 'Parola'
+        'username' => 'Numele de utilizator',
+        'group' => 'Grupul',
+        'password' => 'Parola',
+        'urlLocal' => 'Adresă URL locală',
+        'urlRemote' => 'Adresă URL remote'
     );
     
     
