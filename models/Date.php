@@ -18,9 +18,7 @@ class Date extends Model {
             }
         }
         return $id+1;
-    }
-    
-    
+    }    
     public function getListaLucrari() {
         if($this->userId != null) {
             //filtreaza dupa id
@@ -36,15 +34,27 @@ class Date extends Model {
         }
         return $this->data['Date']['Lucrari'];
     }
+    public function salveazaLucrarea($lucrare) {
+        $lucrare->setID($this->getID());
+        array_push($this->data['Date']['Lucrari'], $lucrare->asArray());
+    }
+    public function stergeLucrarea($idLucrare) {
+        $lucrari = $this->data['Date']['Lucrari'];
+        for($i=0;$i<count($lucrari);$i++) {
+            if($lucrari[$i]['id'] == $idLucrare) {
+                array_splice($this->data['Date']['Lucrari'], $i, 1); //sterg din array si refac numerotarea
+                return true;
+            }
+        }
+        return false;
+    }
+    
     
     public function getListaDepartamente() {
         return $this->data['Date']['Departamente'];
     }
     
-    public function salveazaLucrarea($lucrare) {
-        $lucrare->setID($this->getID());
-        array_push($this->data['Date']['Lucrari'], $lucrare->asArray());
-    }
+    
     
     public function userID($id) {
         $this->userId = $id;

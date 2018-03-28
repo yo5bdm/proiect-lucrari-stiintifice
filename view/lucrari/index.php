@@ -58,9 +58,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-
                 </div>
-
             </div>
         </div>
     </div>
@@ -78,12 +76,12 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.json.autori=[];
     $scope.lucrari=[];
     $scope.getLucrari = function() { 
-        $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"utilizator","id"=>App::$app->user->getId()])?>').then(function(response){
+        return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"utilizator","id"=>App::$app->user->getId()])?>').then(function(response){
             $scope.lucrari = response.data;
         }); 
     };
     $scope.getAutori = function() {
-        $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getusers"])?>').then(function(response){
+        return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getusers"])?>').then(function(response){
             $scope.json.autori = response.data;
         });
     };
@@ -136,7 +134,14 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             alert("Editeaza "+ids);
         };
         $scope.sterge = function(ids) {
-            alert("Sterge "+ids);
+            if(confirm("Sunteti sigur ca doriti sa stergeti inregistrarea "+ids+"?")) {
+                $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"stergelucrarea"])?>/'+ids).then(function(response){
+                    console.log(response.data);
+                    $scope.getLucrari();
+                    $scope.getAutori();
+                }); 
+            }
+            
         };
     });
 }]);

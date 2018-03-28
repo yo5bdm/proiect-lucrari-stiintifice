@@ -44,6 +44,15 @@ class Json extends Controller {
         $this->setData($u);
     }
     
+    public function stergelucrarea($id) {
+        $db = new Date();
+        if($db->stergeLucrarea($id)) {
+            $this->setData('1');
+        } else {
+            $this->setData('0');
+        }
+    }
+    
     public function savelucrare() {
         if($this->getJson()!=NULL) {
             $json = $this->getJson();
