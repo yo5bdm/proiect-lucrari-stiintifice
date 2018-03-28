@@ -21,12 +21,12 @@ class Lucrari extends Controller {
     }
     
     protected function view($id) {
-        $modelDate = new Date();
-        //$this->setData();
+        //$modelDate = new Date();
+        $this->setData(['id'=>$id]);
     }
     
     protected function edit($id) {
-        if(App::$app->isPost()) { }
+        $this->setData(['id'=>$id]);
     }
     
     protected function delete($id) {

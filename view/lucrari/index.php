@@ -141,7 +141,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             $scope.md = $scope.getLucrare(id);
         };
         $scope.editeaza = function(ids) {
-            alert("Editeaza "+ids);
+            window.location.href = '<?=Helpers::generateUrl(["c"=>"lucrari","a"=>"edit"])?>/'+ids;
         };
         $scope.sterge = function(ids) {
             if(confirm("Sunteti sigur ca doriti sa stergeti inregistrarea "+ids+"?")) {
@@ -153,6 +153,9 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             }
             
         };
+        $scope.$apply(function(){
+            $scope.getAutorName($scope.myId);
+        });
     });
 }]);
 </script>

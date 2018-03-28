@@ -128,6 +128,9 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             $scope.currentId = id;
             $scope.md = $scope.getLucrare(id);
         };
+        $scope.$apply(function(){
+            $scope.getAutorName($scope.myId);
+        });
     });
 }]);
 </script>

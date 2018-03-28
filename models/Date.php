@@ -48,7 +48,15 @@ class Date extends Model {
         }
         return false;
     }
-    
+    public function getLucrarea($idLucrare) {
+        $lucrari = $this->data['Date']['Lucrari'];
+        for($i=0;$i<count($lucrari);$i++) {
+            if($lucrari[$i]['id'] == $idLucrare) {
+                return $lucrari[$i];
+            }
+        }
+        return false;
+    }
     
     public function getListaDepartamente() {
         return $this->data['Date']['Departamente'];
