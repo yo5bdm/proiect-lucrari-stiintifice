@@ -14,7 +14,7 @@ class Settings {
     public $useIndex = false;
     public $index = "index.php?c=";
     public $webRoot = "web";
-    public $appFolder = "lucraristiintifice"; //false daca nu e in subfolder
+    public $appFolder = "/lucraristiintifice/"; //string gol daca nu e in subfolder
     public $cssFiles = array(
         'site'
     );
