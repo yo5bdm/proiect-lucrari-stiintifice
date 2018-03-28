@@ -17,7 +17,6 @@ class Lucrare extends Object {
     public $link;
     public $linkLocal;
     public $citari=array();
-    public $bibliografie=array();
     
     public function creare(
                 $titlu, $abstract, $volum, $pagini, 
@@ -34,7 +33,7 @@ class Lucrare extends Object {
         array_push($this->autori,["id"=>App::$app->user->getId(),"nume"=>App::$app->user->getName()]);
     }
     
-    public function set($id,$titlu,$autori,$abstract,$volum,$pagini,$conferinta,$anulPublicarii,$link,$linkLocal,$citari,$bibliografie) {
+    public function set($id,$titlu,$autori,$abstract,$volum,$pagini,$conferinta,$anulPublicarii,$link,$linkLocal,$citari) {
         $this->id = $id;
         $this->titlu = $titlu;
         $this->autori = $autori;
@@ -46,7 +45,6 @@ class Lucrare extends Object {
         $this->link = $link;
         $this->linkLocal = $linkLocal;
         $this->citari = $citari;
-        $this->bibliografie = $bibliografie;
     }
 
     
@@ -58,11 +56,7 @@ class Lucrare extends Object {
     public function addCitare($txt) {
         aray_push($this->citari,$txt);
     }
-    
-    public function addBibliografie($txt) {
-        aray_push($this->bibliografie,$txt);
-    }
-    
+        
     public function getID() {
         return $this->id;
     }
