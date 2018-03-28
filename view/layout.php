@@ -40,9 +40,6 @@
         <?=$this->mesaj()?>
         <?=$this->content?>
     </div>
-    <!--<pre>
-        <?php //print_r($_SESSION); ?>
-    </pre>-->
 </body>
 
 </html>

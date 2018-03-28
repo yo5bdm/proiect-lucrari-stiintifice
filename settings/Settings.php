@@ -15,6 +15,9 @@ class Settings {
     public $index = "index.php?c=";
     public $webRoot = "web";
     public $appFolder = "/lucraristiintifice/"; //string gol daca nu e in subfolder
+    
+    public $debug = true;
+    
     public $cssFiles = array(
         'site'
     );
