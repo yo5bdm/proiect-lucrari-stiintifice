@@ -1,5 +1,18 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
-    <div class="col-xs-12" >
+    <div class="col-xs-12" ng-show="interogare==false">
+        <h2 class="text-center">Caută</h2>
+        <div class="input-group">
+            <input ng-model="interogareText" 
+                   class="form-control" 
+                   placeholder="Lucrare, autor, grup [DE IMPLEMENTAT]" />
+            <span class="input-group-btn">
+              <button class="btn btn-default" ng-click="interogheaza()" type="button">Caută</button>
+            </span>
+        </div>
+        
+    </div>
+    
+    <div class="col-xs-12" ng-show="interogare==true">
         <div class="row">
             <div class="col-xs-8">
                 <h1>Lista de Lucrari</h1>
@@ -11,7 +24,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-12">
+    <div class="col-xs-12" ng-show="interogare==true">
         <hr>
         <p ng-show="lucrari.length<1">Nu exista inregistrari</p>
         <ul class="list-group" ng-show="lucrari.length>0" >
@@ -73,6 +86,13 @@
 <script type="text/javascript">
 var app = angular.module("myApp", ['chart.js']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
+    $scope.interogare = false;
+    $scope.interogareText = "";
+    $scope.interogheaza = function() {
+        alert(interogareText);
+    };
+    
+    
     $scope.json={};
     $scope.json.autori=[];
     $scope.lucrari=[];

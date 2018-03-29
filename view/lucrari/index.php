@@ -16,8 +16,16 @@
             <div class="col-xs-12" >
                 <hr>
                 <p ng-show="lucrari.length<1">Nu exista inregistrari</p>
+                <p ng-show="lucrari.length>0">Sortează după: 
+                    <button ng-click="propertyName = 'titlu'" class="btn btn-default">Titlu</button>
+                    <button ng-click="propertyName = 'autori'" class="btn btn-default">Autor</button>
+                    <button ng-click="propertyName = 'anulPublicarii'" class="btn btn-default">Anul publicării</button> | 
+                    <button ng-click="reverse = false" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button> 
+                    <button ng-click="reverse = true" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                </p>
                 <ul class="list-group" ng-show="lucrari.length>0" >
-                    <li class="list-group-item" ng-repeat="x in lucrari | filter: filtru">
+                    <li class="list-group-item" 
+                        ng-repeat="x in lucrari | filter: filtru | orderBy:propertyName:reverse">
                         <div class="row">
                             <div class="col-xs-8" ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal" >
                                 <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
@@ -26,7 +34,7 @@
                                 <p></p>
                             </div>
                             <div class="col-xs-4">
-                                <p><a href='{{x.link}}'>Link</a>; <a href='{{x.linkLocal}}'>Link local</a></p>
+                                <p>Linkuri <a href='{{x.link}}'>REMOTE</a>; <a href='{{x.linkLocal}}'>LOCAL</a></p>
                                 <p>
                                     <button ng-click="editeaza(x.id)" class="btn btn-success">Editeaza</button>&nbsp;
                                     <button ng-click="sterge(x.id)" class="btn btn-danger">Sterge</button></p>
@@ -53,19 +61,24 @@
                         <p>{{getText(md.volum,'Volumul')}} {{getText(md.pagini,'Pag')}}</p>
                         <p>Publicat in {{md.anulPublicarii}}</p>
                         <p>{{getText(md.conferinta,'Conferinta')}}</p>
+                        <p>Linkuri lucrare 
+                            <a href='{{md.link}}'>REMOTE</a>, 
+                            <a href='{{md.linkLocal}}'>LOCAL</a>
+                        </p>
                         <p>Citări:</p>
                         <canvas id="bar" class="chart chart-bar"
   chart-data="data" chart-labels="labels"> chart-series="series"
                         </canvas>
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="c in md.citari">
-                                {{c.descriere}}, 
+                                {{c.descriere}}<br/>
                                 {{c.an}}, 
-                                <a href="{{c.urlLocal}}">Link Local</a> 
-                                <a href="{{c.urlRemote}}">Link Remote</a>
+                                Linkuri 
+                                <a href="{{c.urlLocal}}">LOCAL</a>, 
+                                <a href="{{c.urlRemote}}">REMOTE</a>
                             </li>
                         </ul>
-                        <p><a href='{{md.link}}'>Link</a>; <a href='{{md.linkLocal}}'>Link local</a></p>
+                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -85,6 +98,9 @@
 <script type="text/javascript">
 var app = angular.module("myApp", ['chart.js']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
+    $scope.propertyName = 'anulPublicarii';
+    $scope.reverse = true;
+            
     $scope.json={};
     $scope.json.autori=[];
     $scope.lucrari=[];
