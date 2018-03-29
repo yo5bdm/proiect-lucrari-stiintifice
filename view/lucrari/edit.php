@@ -4,7 +4,7 @@
         <!-- START NG-APP -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="card-title text-center">Adauga o lucrare noua</h3>
+                <h3 class="card-title text-center">Editează lucrarea</h3>
             </div>
             <div class="panel-body">
                 <p><input name="titlu" ng-model="lucrare.titlu" placeholder="Titlu" class="form-control" type="text"></p>
@@ -34,6 +34,7 @@
                     <ul class="list-group" >
                         <li class="list-group-item" ng-repeat="x in lucrare.citari">
                             {{x.descriere}}, {{x.an}}, <a href="{{x.urlRemote}}">Link</a>, <a href="{{x.urlLocal}}">Link Local</a>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Sterge selectia" ng-click="stergeCitarea($index)"></span>
                         </li>
                     </ul>
                 </div>
@@ -81,7 +82,6 @@ app.controller("myCtrl", ['$scope','$http',function($scope,$http) {
             $scope.json.autori = response.data;
         }); 
     };
-    
     $scope.getLucrarea = function() {
         return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getlucrare"])?>/'+$scope.lucrareID).then(function(response){
             $scope.lucrare = response.data;
@@ -120,6 +120,9 @@ Promise.all([
         $scope.citare.urlLocal="";
         $scope.citare.urlRemote="";
     };
+    $scope.stergeCitarea = function (index) {
+        $scope.lucrare.citari.splice(index,1);
+    };
     $scope.getNameById = function(ids) {
         var autori = $scope.json.autori;
         for(var i=0;i<autori.length;i++){
@@ -138,11 +141,11 @@ Promise.all([
                 'Content-Type': 'application/json' //'application/x-www-form-urlencoded;charset=UTF-8'
             }
         };
-        $http.post("<?= Helpers::generateUrl(['c'=>'json','a'=>'updatelucrare'])?>",param,config).then(function(response){
+        $http.post("<?= Helpers::generateUrl(['c'=>'json','a'=>'updatelucrare'])?>/",param,config).then(function(response){
             console.log(response);
         });
     };
-    $scope.$apply(function(){
+    $scope.$apply(function(){ //bug afisare dupa finalizare incarcare
         $scope.getNameById($scope.currentUser.id);
     });
 });

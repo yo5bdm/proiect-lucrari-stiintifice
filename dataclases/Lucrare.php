@@ -47,16 +47,12 @@ class Lucrare extends Object {
         $this->citari = $citari;
     }
 
-    
-    
     public function addAutor($id) {
         aray_push($this->autori,$id);
     }
-    
     public function addCitare($citare) {
         aray_push($this->citari,$citare->asArray());
     }
-        
     public function getID() {
         return $this->id;
     }

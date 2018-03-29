@@ -24,31 +24,6 @@ class Json extends Controller {
         $content = $date->userId(App::$app->user->getId())->getLucrarea($id);
         $this->setData($content);
     }
-    
-    public function utilizator($id) {
-        $date = new Date();
-        $data = $date->userId($id)->getListaLucrari();
-        $this->setData($data);
-    }
-    
-    public function listauseri() {
-        $date = new Users();
-        $data = $date->getData();
-        $this->setData($data);
-    }
-    
-    public function getuser($nume) {
-        $users = new Users();
-        $u = $users->getByName($nume);
-        $this->setData($u);
-    }
-    
-    public function getusers() {
-        $users = new Users();
-        $u = $users->getNameList();
-        $this->setData($u);
-    }
-    
     public function stergelucrarea($id) {
         $db = new Date();
         if($db->stergeLucrarea($id)) {
@@ -57,7 +32,6 @@ class Json extends Controller {
             $this->setData('0');
         }
     }
-    
     public function savelucrare() {
         if($this->getJson()!=NULL) {
             $json = $this->getJson();
@@ -70,5 +44,44 @@ class Json extends Controller {
             $this->setData('0');
         }
     }
+    public function updatelucrare($id) {
+        if($this->getJson()!=NULL) {
+            $json = $this->getJson();
+            $lucrare = new Lucrare();
+            $lucrare->fromArray($json['datele']);
+            $lucrare->setID($json['lucrareid']);
+            $lucrareModel = new Date();
+            if($lucrareModel->actualizeazaLucrarea($lucrare)) {
+                $this->setData('1');
+            } else {
+                $this->setData('0');
+            }
+        } else {
+            $this->setData('-1');
+        }
+    }
+    
+    public function utilizator($id) {
+        $date = new Date();
+        $data = $date->userId($id)->getListaLucrari();
+        $this->setData($data);
+    }
+    public function listauseri() {
+        $date = new Users();
+        $data = $date->getData();
+        $this->setData($data);
+    }
+    public function getuser($nume) {
+        $users = new Users();
+        $u = $users->getByName($nume);
+        $this->setData($u);
+    }
+    public function getusers() {
+        $users = new Users();
+        $u = $users->getNameList();
+        $this->setData($u);
+    }
+    
+    
     
 }

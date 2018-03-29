@@ -57,18 +57,25 @@ class Date extends Model {
         }
         return false;
     }
-    
+    public function actualizeazaLucrarea($lucrare) {
+        $lucrari = $this->data['Date']['Lucrari'];
+        for($i=0;$i<count($lucrari);$i++) {
+            if($lucrari[$i]['id'] == $lucrare->getID()) {
+                $this->updateLucrare($i, $lucrare);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getListaDepartamente() {
         return $this->data['Date']['Departamente'];
     }
-    
-    
     
     public function userID($id) {
         $this->userId = $id;
         return $this;
     }
-
     protected function getID() {
         $id = 0;
         foreach($this->data['Date']['Lucrari'] as $lucrare) {
@@ -81,4 +88,22 @@ class Date extends Model {
         //unused
     }
 
+    // METODE PRIVATE
+    private function updateLucrare($index, $lucrare) {
+        $vars = array(
+            'titlu',
+            'autori',
+            'abstract',
+            'volum',
+            'pagini',
+            'conferinta',
+            'anulPublicarii',
+            'link',
+            'linkLocal',
+            'citari'
+        );
+        foreach($vars as $v) {
+            $this->data['Date']['Lucrari'][$index][$v] = $lucrare->$v;
+        }
+    }
 }
