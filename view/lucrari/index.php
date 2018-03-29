@@ -17,11 +17,12 @@
                 <hr>
                 <p ng-show="lucrari.length<1">Nu exista inregistrari</p>
                 <p ng-show="lucrari.length>0">Sortează după: 
-                    <button ng-click="propertyName = 'titlu'" class="btn btn-default">Titlu</button>
-                    <button ng-click="propertyName = 'autori'" class="btn btn-default">Autor</button>
-                    <button ng-click="propertyName = 'anulPublicarii'" class="btn btn-default">Anul publicării</button> | 
-                    <button ng-click="reverse = false" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button> 
-                    <button ng-click="reverse = true" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                    <button ng-click="propertyName = 'titlu'" 
+                            ng-class="{'btn btn-success':propertyName=='titlu', 'btn btn-default':propertyName!='titlu'}">Titlu</button>
+                    <button ng-click="propertyName = 'autori'" ng-class="{'btn btn-success':propertyName=='autori', 'btn btn-default':propertyName!='autori'}">Autor</button>
+                    <button ng-click="propertyName = 'anulPublicarii'" ng-class="{'btn btn-success':propertyName=='anulPublicarii', 'btn btn-default':propertyName!='anulPublicarii'}">Anul publicării</button> | 
+                    <button ng-click="reverse = false" ng-class="{'btn btn-success':reverse!=true, 'btn btn-default':reverse==true}"><span class="glyphicon glyphicon-arrow-up"></span></button> 
+                    <button ng-click="reverse = true" ng-class="{'btn btn-success':reverse==true, 'btn btn-default':reverse!=true}"><span class="glyphicon glyphicon-arrow-down"></span></button>
                 </p>
                 <ul class="list-group" ng-show="lucrari.length>0" >
                     <li class="list-group-item" 
