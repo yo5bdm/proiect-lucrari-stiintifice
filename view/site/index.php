@@ -45,14 +45,17 @@
             <p>Publicat in {{md.anulPublicarii}}</p>
             <p>{{getText(md.conferinta,'Conferinta')}}</p>
             <p>Citări:</p>
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="c in md.citari">
-                        {{c.descriere}}, 
-                        {{c.an}}, 
-                        <a href="{{c.urlLocal}}">Link Local</a> 
-                        <a href="{{c.urlRemote}}">Link Remote</a>
-                    </li>
-                </ul>
+            <canvas id="bar" class="chart chart-bar"
+  chart-data="data" chart-labels="labels"> chart-series="series"
+            </canvas>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="c in md.citari">
+                    {{c.descriere}}, 
+                    {{c.an}}, 
+                    <a href="{{c.urlLocal}}">Link Local</a> 
+                    <a href="{{c.urlRemote}}">Link Remote</a>
+                </li>
+            </ul>
             <p><a href='{{md.link}}'>Link</a>; <a href='{{md.linkLocal}}'>Link local</a></p>
         </div>
         <div class="modal-footer">
@@ -68,7 +71,7 @@
 
 
 <script type="text/javascript">
-var app = angular.module("myApp", []);
+var app = angular.module("myApp", ['chart.js']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.json={};
     $scope.json.autori=[];
@@ -92,6 +95,44 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         $scope.filtru="";
         $scope.currentId;
         $scope.md = {};
+        
+        $scope.labels = []; //http://www.chartjs.org/docs/latest/
+        $scope.data = [];   //http://jtblin.github.io/angular-chart.js/
+        $scope.graphData = function() {
+            //$scope.md - aici e lucrarea
+            var min = $scope.getMinYear();
+            var max = $scope.getMaxYear();
+            $scope.labels = [];
+            $scope.data = [];
+            for(var i=min;i<=max;i++) {
+                $scope.labels.push(Number(i));
+                $scope.data.push($scope.countYear(Number(i)));
+            }
+        };
+        $scope.getMinYear = function() {
+            var year = 9999;
+            for(var i=0;i<$scope.md.citari.length;i++) {
+                if(Number($scope.md.citari[i].an) < year) year = Number($scope.md.citari[i].an);
+            }
+            if(year!=9999) return year;
+            else return 0; //nu am gasit nimic
+        };
+        $scope.getMaxYear = function() {
+            var year = 0;
+            for(var i=0;i<$scope.md.citari.length;i++) {
+                if(Number($scope.md.citari[i].an) > year) year = Number($scope.md.citari[i].an);
+            }
+            return year; //nu am gasit nimic
+        };
+        $scope.countYear = function(year) {
+            var ret = 0;
+            for(var i=0;i<$scope.md.citari.length;i++) {
+                if(Number($scope.md.citari[i].an) == year) ret++;
+            }
+            return ret;
+        };
+        
+        
         $scope.getLucrare = function(ids) {
             var lucrare;
             for(var i=0;i<$scope.lucrari.length;i++) {
@@ -127,6 +168,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         $scope.modal = function(id) {
             $scope.currentId = id;
             $scope.md = $scope.getLucrare(id);
+            $scope.graphData();
         };
         $scope.$apply(function(){
             $scope.getAutorName($scope.myId);

@@ -24,6 +24,8 @@ class Settings {
     public $jsFiles = array(
         'angular.min',
         'jquery-3.3.1.min',
+        //'chart',
+        'angular-chart.min'
         //'typeahead.bundle'
     );
     
@@ -75,10 +77,12 @@ class Settings {
     }
     public function printJsFiles() {
         $ret ="";
+        $ret .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>';
         foreach($this->jsFiles as $file) {
             $ret .= "<script src=".$this->url.DS.$this->webRoot.DS."js".DS.$file.".js"."></script>";
         }
         $ret .= "<script src=".$this->url.DS.$this->webRoot.DS."bootstrap-3.3.7/dist/js/bootstrap.min.js"."></script>";
+        
         return $ret;
     }
     
