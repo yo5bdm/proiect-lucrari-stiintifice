@@ -16,8 +16,7 @@ class Json extends Controller {
     
     public function listalucrari() {
         $date = new Date();
-        $data = $date->getListaLucrari();
-        $this->setData($data);
+        $this->setData($date->getListaLucrari());
     }
     public function getLucrare($id) {
         $date = new Date();
@@ -44,7 +43,7 @@ class Json extends Controller {
             $this->setData('0');
         }
     }
-    public function updatelucrare($id) {
+    public function updatelucrare() {
         if($this->getJson()!=NULL) {
             $json = $this->getJson();
             $lucrare = new Lucrare();
@@ -82,6 +81,20 @@ class Json extends Controller {
         $this->setData($u);
     }
     
+    public function getunitate() {
+        $date = new Date();
+        $this->setData($date->getUnitate());
+    }
     
+    public function saveunitate() {
+        if($this->getJson()!=NULL) {
+            $json = $this->getJson();
+            $date = new Date();
+            $date->salveazaUnitate($json);
+            $this->setData('1');
+        } else {
+            $this->setData('0');
+        }
+    }
     
 }

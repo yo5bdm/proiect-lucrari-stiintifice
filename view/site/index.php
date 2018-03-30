@@ -1,10 +1,11 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
-    <div class="col-xs-12" ng-show="interogare==false">
-        <h2 class="text-center">Caută</h2>
+    <div class="col-xs-12" >
+        <h2 class="text-center"><?=App::$app->settings->numeAplicatie?></h2>
+        <p ng-show="interogare==false">&nbsp</p>
         <div class="input-group">
             <input ng-model="interogareText" 
                    class="form-control" 
-                   placeholder="Lucrare, autor, grup [DE IMPLEMENTAT]" />
+                   placeholder="Caută lucrare, autor, grup [DE IMPLEMENTAT]" />
             <span class="input-group-btn">
               <button class="btn btn-default" ng-click="interogheaza()" type="button">Caută</button>
             </span>
@@ -13,31 +14,34 @@
     </div>
     
     <div class="col-xs-12" ng-show="interogare==true">
+        <!-- START afisare lucrari gasite -->
         <div class="row">
-            <div class="col-xs-8">
-                <h1>Lista de Lucrari</h1>
-            </div>
-            <div class="col-xs-4 filtrare">
-                <div class="navbar-form navbar-right">
-                    <input type="text" ng-model="filtru" class="form-control" placeholder="Filtrează"/>
-                </div>
+            <div class="col-xs-12">
+                <h1>Lucrari</h1>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr>
+                <p ng-show="lucrari.length<1">Nu exista inregistrari</p>
+                <ul class="list-group" ng-show="lucrari.length>0" >
+                    <li class="list-group-item" ng-repeat="x in lucrari | filter: filtru">
+                        <div ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">
+                            <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
+                            <p>Anul publicarii {{x.anulPublicarii}}; </p>
+                            <p>Citat de {{x.citari.length}} ori; Linkuri <a href='{{x.link}}'>REMOTE</a>; <a href='{{x.linkLocal}}'>LOCAL</a></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- END afisare lucraci gasite -->
+        <!-- START afisare autori gasiti -->
+        <!-- END afisare autori gasiti -->
+        <!-- START afisare grupuri, etc -->
+        <!-- END afisare grupuri, etc -->
     </div>
-    <div class="col-xs-12" ng-show="interogare==true">
-        <hr>
-        <p ng-show="lucrari.length<1">Nu exista inregistrari</p>
-        <ul class="list-group" ng-show="lucrari.length>0" >
-            <li class="list-group-item" ng-repeat="x in lucrari | filter: filtru">
-                <div ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">
-                    <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
-                    <p>Anul publicarii {{x.anulPublicarii}}; {{getText(x.volum,'Vol:')}}, {{getText(x.pagini,'Pag:')}}</p>
-                    <p>{{getText(x.conferinta,'Conferinta:')}}</p>
-                    <p>Citat de {{x.citari.length}} ori</p>
-                    <p><a href='{{x.link}}'>Link</a>; <a href='{{x.linkLocal}}'>Link local</a></p>
-                </div>
-            </li>
-        </ul>
+    
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
@@ -77,10 +81,9 @@
     </div>
 
   </div>
-</div>
+</div> <!-- END modal -->
     
-    </div>
-</div>
+</div> <!-- END ng-app -->
 
 
 <script type="text/javascript">
@@ -89,7 +92,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.interogare = false;
     $scope.interogareText = "";
     $scope.interogheaza = function() {
-        alert(interogareText);
+        $scope.interogare = true;
     };
     
     
@@ -111,11 +114,12 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         $scope.getLucrari(),
         $scope.getAutori()
     ]).then(function(data){
+        //filtre si altele
         $scope.myId = "<?=App::$app->user->getId()?>";
         $scope.filtru="";
         $scope.currentId;
         $scope.md = {};
-        
+        //graph data
         $scope.labels = []; //http://www.chartjs.org/docs/latest/
         $scope.data = [];   //http://jtblin.github.io/angular-chart.js/
         $scope.graphData = function() {
@@ -152,7 +156,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             return ret;
         };
         
-        
+        //metode diverse
         $scope.getLucrare = function(ids) {
             var lucrare;
             for(var i=0;i<$scope.lucrari.length;i++) {

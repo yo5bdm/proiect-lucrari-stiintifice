@@ -3,4 +3,8 @@
 
 - de modificat pagina site/index google-like (casuta de cautare), 
 afiseaza autor/lucrare/departamente/etc cu 
-numararea autorilot, lucrarilor, citarilor, etc
+numararea autorilor, lucrarilor, citarilor, etc
+
+
+
+Users <- Grupuri <- Departamente <- Facultati

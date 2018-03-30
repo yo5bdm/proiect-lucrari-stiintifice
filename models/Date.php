@@ -72,6 +72,19 @@ class Date extends Model {
         return $this->data['Date']['Departamente'];
     }
     
+    public function getUnitate() {
+        $ret = array();
+        $ret['departamente'] = $this->data['Date']['Departamente'];
+        $ret['grupuri'] = $this->data['Date']['Grupuri'];
+        $ret['facultati'] = $this->data['Date']['Facultati'];
+        return $ret;
+    }
+    public function salveazaUnitate($json) {
+        $this->data['Date']['Departamente'] = $json['datele']['departamente'];
+        $this->data['Date']['Facultati'] = $json['datele']['facultati'];
+        $this->data['Date']['Grupuri'] = $json['datele']['grupuri'];
+    }
+    
     public function userID($id) {
         $this->userId = $id;
         return $this;
