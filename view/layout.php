@@ -22,14 +22,21 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
               <?php if(App::$app->user->isLoggedIn()): ?>
-              <?php foreach(App::$app->settings->meniuLogat as $text => $link): ?>
-              <li><a href="<?=Helpers::generateUrl($link)?>"><?=ucfirst($text)?></a></li>
-              <?php endforeach; ?>
-              <li><a href="<?=Helpers::generateUrl(["c"=>"site","a"=>"profil"])?>"><?=App::$app->user->getName()?></a></li>
+                <?php if(App::$app->user->isAdmin()): ?>
+                    <?php foreach(App::$app->settings->meniuAdmin as $text => $link): ?>
+                    <li><a href="<?=Helpers::generateUrl($link)?>"><?=ucfirst($text)?></a></li>
+                    <?php endforeach; ?>
+                    <li><a href="<?=Helpers::generateUrl(["c"=>"site","a"=>"profil"])?>"><?=App::$app->user->getName()?></a></li>
+                <?php else: ?>
+                    <?php foreach(App::$app->settings->meniuLogat as $text => $link): ?>
+                    <li><a href="<?=Helpers::generateUrl($link)?>"><?=ucfirst($text)?></a></li>
+                    <?php endforeach; ?>
+                    <li><a href="<?=Helpers::generateUrl(["c"=>"site","a"=>"profil"])?>"><?=App::$app->user->getName()?></a></li>
+                <?php endif; ?>
               <?php else: ?>
-              <?php foreach(App::$app->settings->meniuVizitator as $text => $link): ?>
-              <li><a href="<?=Helpers::generateUrl($link)?>"><?=ucfirst($text)?></a></li>
-              <?php endforeach; ?>
+                <?php foreach(App::$app->settings->meniuVizitator as $text => $link): ?>
+                <li><a href="<?=Helpers::generateUrl($link)?>"><?=ucfirst($text)?></a></li>
+                <?php endforeach; ?>
               <?php endif; ?>
           </ul>
         </div><!--/.nav-collapse -->
@@ -40,6 +47,7 @@
         <?=$this->mesaj()?>
         <?=$this->content?>
     </div>
+    
 </body>
 
 </html>

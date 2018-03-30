@@ -9,6 +9,7 @@
 class Users extends Model {
     public function insertData($date) {
         $date['id'] = $this->getID();
+        $date['admin'] = FALSE;
         array_push($this->data['Users'], $date);
         return true;
     }

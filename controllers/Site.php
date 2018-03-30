@@ -13,8 +13,7 @@ class Site extends Controller {
     );
     
     protected function index() {
-        
-        //descrierea aplicatiei
+        //pagina principala a aplicatiei
     }
     
     protected function login() {

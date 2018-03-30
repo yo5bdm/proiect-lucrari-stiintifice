@@ -8,6 +8,7 @@
 
 class Unitate extends Controller {
     
+    public $admin = true;
     public $permissions = array( //metodele protejate prin login;
         'index'
     );

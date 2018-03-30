@@ -47,6 +47,16 @@ class Settings {
         "Logout" => ["c"=>"site","a"=>"logout"]
     );
     
+    public $meniuAdmin = array(
+        "Acasa" => ["c"=>"site","a"=>"index"],
+        "Lista lucrari" => ["c"=>"lucrari","a"=>"index"],
+        "Adauga Lucrare"=>["c"=>"lucrari","a"=>"add"],
+        "Utilizatori"=>['c'=>'users','a'=>'index'],
+        "Unitate"=>['c'=>'unitate','a'=>'index'],
+        "Logout" => ["c"=>"site","a"=>"logout"]
+        
+    );
+    
     public $traducere = array(
         'username' => 'Numele de utilizator',
         'group' => 'Grupul',
