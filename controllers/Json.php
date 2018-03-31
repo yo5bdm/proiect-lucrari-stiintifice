@@ -80,6 +80,22 @@ class Json extends Controller {
         $u = $users->getNameList();
         $this->setData($u);
     }
+    public function getmyuser() {
+        if(App::$app->user->isLoggedIn()) {
+            $users = new Users();
+            $user = $users->getById(App::$app->user->getID());
+            $this->setData($user);
+        } else {
+            $this->setData(false);
+        }
+    }
+    public function updateuser() {
+        if(App::$app->user->isLoggedIn()){
+            $db = new Users();
+            $this->setData($db->updateUser($this->getJson()));
+        }
+    }
+    
     
     public function getunitate() {
         $date = new Date();
@@ -95,6 +111,11 @@ class Json extends Controller {
         } else {
             $this->setData('0');
         }
+    }
+    
+    public function getgrupuri() {
+        $date = new Date();
+        $this->setData($date->getListaGrupuri());
     }
     
 }

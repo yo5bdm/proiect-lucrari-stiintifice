@@ -9,7 +9,7 @@
 class Site extends Controller {
     
     public $permissions = array( //metodele protejate prin login;
-        'logout'
+        'logout', 'profil'
     );
     
     protected function index() {
@@ -49,4 +49,7 @@ class Site extends Controller {
         }
     }
     
+    protected function profil() {
+        
+    }
 }

@@ -13,7 +13,6 @@ class Users extends Model {
         array_push($this->data['Users'], $date);
         return true;
     }
-    
     protected function getID() {
         $id = 0;
         foreach($this->data['Users'] as $user) {
@@ -23,7 +22,6 @@ class Users extends Model {
         }
         return $id+1;
     }
-    
     public function verificare($username,$password) {
         foreach($this->data['Users'] as $user) {
             if($user['username']==$username && $user['password']==$password) {
@@ -42,7 +40,6 @@ class Users extends Model {
         }
         return false;
     }
-    
     public function getById($id) {
         foreach($this->data['Users'] as $user) {
             if($user['id']==$id) {
@@ -51,7 +48,6 @@ class Users extends Model {
         }
         return false;
     }
-    
     public function getByName($name) {
         $u = array();
         $lowerName = strtolower($name);
@@ -65,7 +61,6 @@ class Users extends Model {
         if(count($u)==0) return false;
         else return $u;
     }
-    
     public function getNameList() {
         $u = array();
         foreach($this->data['Users'] as $user) {
@@ -74,5 +69,17 @@ class Users extends Model {
         }
         if(count($u)==0) return false;
         else return $u;
+    }
+    public function updateUser($user) {
+        $fields = array('nume','prenume','password','email','functia','group');
+        for($i=0;$i < count($this->data['Users']);$i++){
+            if($this->data['Users'][$i]['id'] == App::$app->user->getId()) {
+                foreach ($fields as $field) {
+                    $this->data['Users'][$i][$field] = $user['datele'][$field];
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }

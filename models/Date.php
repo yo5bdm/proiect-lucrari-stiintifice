@@ -34,6 +34,9 @@ class Date extends Model {
         }
         return $this->data['Date']['Lucrari'];
     }
+    public function getListaGrupuri() {
+        return $this->data['Date']['Grupuri'];
+    }
     public function salveazaLucrarea($lucrare) {
         $lucrare->setID($this->getID());
         array_push($this->data['Date']['Lucrari'], $lucrare->asArray());
