@@ -4,28 +4,35 @@
         <p ng-show="interogare==false">&nbsp</p>
         <div class="input-group">
             <input ng-model="interogareText" 
+                   ng-model-options="{ getterSetter: true }"
                    class="form-control" 
                    placeholder="Caută lucrare, autor, grup [DE IMPLEMENTAT]" />
             <span class="input-group-btn">
               <button class="btn btn-default" ng-click="interogheaza()" type="button">Caută</button>
             </span>
         </div>
-        
+    </div>
+    
+    <div class="col-xs-12" ng-show="interogare==false">
+        <hr/>
+        <h4 class="text-center">{{json.autori.length}} autori au publicat {{lucrari.length}} lucrări, totalizând {{countCitari()}} citări</h4>
     </div>
     
     <div class="col-xs-12" ng-show="interogare==true">
-        <!-- START afisare lucrari gasite -->
-        <div class="row">
-            <div class="col-xs-12">
-                <h1>Lucrari</h1>
-            </div>
-        </div>
-        <div class="row">
+        
+        <div class="row"> <!-- START afisare lucrari gasite -->
             <div class="col-xs-12">
                 <hr>
+<!--    <li ng-repeat="item in filteredItems  = (items | filter:keyword)">
+        ...
+    </li>
+</ul>
+<div ng-hide="filteredItems.length">No items found</div>-->
+                
+                
                 <p ng-show="lucrari.length<1">Nu exista inregistrari</p>
                 <ul class="list-group" ng-show="lucrari.length>0" >
-                    <li class="list-group-item" ng-repeat="x in lucrari | filter: filtru">
+                    <li class="list-group-item" ng-repeat="x in lucrari | filter: interogareText">
                         <div ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">
                             <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
                             <p>Anul publicarii {{x.anulPublicarii}}; </p>
@@ -34,8 +41,8 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- END afisare lucraci gasite -->
+        </div> <!-- END afisare lucrari gasite -->
+        
         <!-- START afisare autori gasiti -->
         <!-- END afisare autori gasiti -->
         <!-- START afisare grupuri, etc -->
@@ -91,13 +98,20 @@ var app = angular.module("myApp", ['chart.js']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.interogare = false;
     $scope.interogareText = "";
+    $scope.controlShow = function() {
+        if($scope.interogareText.length == 0) {
+            $scope.interogare = false;
+        } else {
+            $scope.interogare = true;
+        }
+    }
     $scope.interogheaza = function() {
-        $scope.interogare = true;
+        $scope.controlShow();
     };
-    
     
     $scope.json={};
     $scope.json.autori=[];
+    $scope.json.unitate=[];
     $scope.lucrari=[];
     $scope.getLucrari = function() { 
         $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"listalucrari"])?>').then(function(response){
@@ -109,10 +123,16 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             $scope.json.autori = response.data;
         });
     };
+    $scope.getUnitate = function() { 
+        return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getunitate"])?>').then(function(response){
+            $scope.json.unitate = response.data;
+        }); 
+    };
     //metode
     Promise.all([
         $scope.getLucrari(),
-        $scope.getAutori()
+        $scope.getAutori(),
+        $scope.getUnitate()
     ]).then(function(data){
         //filtre si altele
         $scope.myId = "<?=App::$app->user->getId()?>";
@@ -155,7 +175,14 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             }
             return ret;
         };
-        
+        $scope.countCitari = function(){
+            var lucrari = $scope.lucrari;
+            var count = 0;
+            for(var i=0;i<lucrari.length;i++) {
+                count += lucrari[i].citari.length;
+            }
+            return count;
+        };
         //metode diverse
         $scope.getLucrare = function(ids) {
             var lucrare;
@@ -196,6 +223,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         };
         $scope.$apply(function(){
             $scope.getAutorName($scope.myId);
+            $scope.controlShow();
         });
     });
 }]);
