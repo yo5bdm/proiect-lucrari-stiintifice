@@ -51,7 +51,7 @@ class Settings {
         "Acasa" => ["c"=>"site","a"=>"index"],
         "Lista lucrari" => ["c"=>"lucrari","a"=>"index"],
         "Adauga Lucrare"=>["c"=>"lucrari","a"=>"add"],
-        "Utilizatori"=>['c'=>'users','a'=>'index'],
+        "Admin"=>['c'=>'admin','a'=>'index'],
         "Unitate"=>['c'=>'unitate','a'=>'index'],
         "Logout" => ["c"=>"site","a"=>"logout"]
         

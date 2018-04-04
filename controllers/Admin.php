@@ -10,7 +10,11 @@ class Admin extends Controller {
     
     public $admin = true;
     
-    public function index() {
+    public $permissions = array( //metodele protejate prin login;
+        'index'
+    );
+    
+    protected function index() {
         
     }
     

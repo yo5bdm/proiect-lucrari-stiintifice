@@ -1,44 +1,109 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
-    <div class="col-xs-12" >
-        <div class="row">
-            <div class="col-xs-8">
-                <h1>Lista de utilizatori</h1>
-            </div>
-            <div class="col-xs-4 filtrare">
-                <div class="navbar-form navbar-right">
-                    <input type="text" ng-model="filtru" class="form-control" placeholder="Filtrează"/>
-                </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h4>Adaugă / modifică opțiunile pentru tipul de indexare:</h4></div>
+            <div class="panel-body">        
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="x in json.Categorii | orderBy:id">
+                        {{x.id}}. {{x.denumire}}
+                        <span class="glyphicon glyphicon-remove pull-right" title="Sterge selectia" ng-click="stergeCategoria(x.id)"></span>
+                        <span ng-show="$index > 0" ng-click="urca(x.id)" title="Urcă" class="glyphicon glyphicon-arrow-up pull-right"></span>&nbsp;
+                        <span ng-show="$index < json.Categorii.length-1" ng-click="coboara(x.id)" title="Coboară" class="glyphicon glyphicon-arrow-down pull-right"></span>&nbsp;
+
+                    </li>
+                    <li class="list-group-item list-group-item-info" ng-hide="json.Categorii.length">Nu sunt categorii de afisat</li>
+                </ul>
+                <hr/>
+                <p>Adaugă o categorie nouă:</p>
+                <input class="form-control" ng-model="form.denumire" placeholder="Denumire categorie"/> <br/>
+                <button ng-click="adaugaCategorie()" class="form-control btn btn-success">Adaugă categoria</button>
             </div>
         </div>
-    </div>   
-    
-    <div class="col-xs-12">
-        
-        <p ng-show="useri.length<1">Nu exista inregistrari</p>
-        <ul class="list-group" ng-show="useri.length>0" >
-            <li class="list-group-item" ng-repeat="x in useri | filter: filtru">
-                <div ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">
-                    <h3>{{x.name}} <small>{{x.email}}</small></h3>
-                    <p><button class="btn btn-success" ng-click="sterge(x.id)">Sterge userul</button></p>
-                </div>
-            </li>
-        </ul>
-        
-        
     </div>
 </div>
 <script type="text/javascript">
 var app = angular.module("myApp", []);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
-    var promise = $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"listauseri"])?>').then(function(response){
-        $scope.useri = response.data;
+    $scope.json = {};
+    $scope.form = {};
+    var promise = $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"admin"])?>').then(function(response){
+        $scope.json = response.data;
+        console.log($scope.json);
     });
     //metode
     promise.then(function(data){
-        $scope.filtru="";
-        $scope.sterge = function(ids) {
-            var url = '<?=Helpers::generateUrl(["c"=>"json","a"=>"stergeuser"])?>/'+ids;
-            alert(url);
+        $scope.form.denumire='';
+        $scope.adaugaCategorie = function() {
+            var cat = {
+                id:$scope.getNextCategorieID(),
+                denumire:$scope.form.denumire
+            };
+            $scope.json.Categorii.push(cat);
+            $scope.salveazaCategorii();
+        };
+        
+        $scope.getNextCategorieID = function() {
+            var id = 0;
+            $scope.json.Categorii.filter(function(cat){
+                if(cat.id>id) id = cat.id;
+                return false;
+            });
+            return id+1;
+        };
+        $scope.urca = function(ids) {
+            for(var i=0;i<$scope.json.Categorii.length;i++) {
+                if($scope.json.Categorii[i].id == ids) {
+                    $scope.json.Categorii[i].id--;
+                    $scope.json.Categorii[i-1].id++;
+                    $scope.sorteaza();
+                    $scope.salveazaCategorii();
+                    break;
+                }
+            };
+        };
+        
+        
+        $scope.coboara = function(ids) {
+            for(var i=0;i<$scope.json.Categorii.length;i++) {
+                if($scope.json.Categorii[i].id == ids) {
+                    $scope.json.Categorii[i].id++;
+                    $scope.json.Categorii[i+1].id--;
+                    $scope.sorteaza();
+                    $scope.salveazaCategorii();
+                    break;
+                }
+            };
+        };
+        $scope.sorteaza = function() {
+            $scope.json.Categorii.sort(function(a,b){
+                return a.id - b.id;
+            });
+        };
+        $scope.stergeCategoria = function(ids) {
+            for(var i=0;i<$scope.json.Categorii.length;i++) {
+                if($scope.json.Categorii[i].id == ids) {
+                    $scope.json.Categorii.splice(i,1);
+                    $scope.salveazaCategorii();
+                    break;
+                }
+            }
+            for(var i=0;i<$scope.json.Categorii.length;i++) {
+                $scope.json.Categorii[i].id = i+1;
+            }
+        }
+        
+        $scope.salveazaCategorii = function(){
+            var param = {
+            datele:$scope.json.Categorii
+            };
+            var config = {
+                headers : {
+                    'Content-Type': 'application/json'
+                }
+            };
+            $http.post("<?= Helpers::generateUrl(['c'=>'json','a'=>'savecategorii'])?>",param,config).then(function(response){
+                console.log(response);
+            });
         };
     });
 }]);

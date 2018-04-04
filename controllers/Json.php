@@ -118,4 +118,20 @@ class Json extends Controller {
         $this->setData($date->getListaGrupuri());
     }
     
+    public function admin() { //toate datele necesare pe pagina de admin
+        $date = new Date();
+        $this->setData($date->getData());
+    }
+    public function savecategorii() {
+        if($this->getJson()!=NULL) {
+            $json = $this->getJson();
+            $date = new Date();
+            $date->updateCategorii($json['datele']);
+            $this->setData('1');
+        } else {
+            $this->setData('0');
+        }
+        
+    }
+    
 }

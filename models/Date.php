@@ -103,6 +103,9 @@ class Date extends Model {
     public function insertData($data) {
         //unused
     }
+    public function updateCategorii($cat) {
+        $this->data['Date']['Categorii'] = $cat;
+    }
 
     // METODE PRIVATE
     private function updateLucrare($index, $lucrare) {
