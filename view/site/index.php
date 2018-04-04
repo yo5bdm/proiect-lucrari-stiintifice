@@ -20,33 +20,44 @@
     
     <div class="col-xs-12" ng-show="interogare==true">
         
-        <div class="row"> <!-- START afisare lucrari gasite -->
+        <div class="row"> 
             <div class="col-xs-12">
                 <hr>
-<!--    <li ng-repeat="item in filteredItems  = (items | filter:keyword)">
-        ...
-    </li>
-</ul>
-<div ng-hide="filteredItems.length">No items found</div>-->
-                
-                
-                <p ng-show="lucrari.length<1">Nu exista inregistrari</p>
-                <ul class="list-group" ng-show="lucrari.length>0" >
-                    <li class="list-group-item" ng-repeat="x in lucrari | filter: interogareText">
+                <p>Lucrări:</p>
+                <ul class="list-group"> <!-- START afisare lucrari gasite -->
+                    <li class="list-group-item" ng-repeat="x in lucrariFiltrate = (lucrari | filter: interogareText)">
                         <div ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">
                             <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
                             <p>Anul publicarii {{x.anulPublicarii}}; </p>
                             <p>Citat de {{x.citari.length}} ori; Linkuri <a href='{{x.link}}'>REMOTE</a>; <a href='{{x.linkLocal}}'>LOCAL</a></p>
                         </div>
                     </li>
-                </ul>
-            </div>
-        </div> <!-- END afisare lucrari gasite -->
+                    <li class="list-group-item" ng-hide="lucrariFiltrate.length">Nu există lucrări corespunzătoare acestui filtru.</li>
+                </ul> <!-- END afisare lucrari gasite -->        
         
-        <!-- START afisare autori gasiti -->
-        <!-- END afisare autori gasiti -->
-        <!-- START afisare grupuri, etc -->
-        <!-- END afisare grupuri, etc -->
+        
+        
+        
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-4"><!-- START afisare autori gasiti -->
+                <hr>
+                <p>Autori:</p>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="x in autoriFiltru = (json.autori | filter:interogareText)">
+                        <h4>{{x.functia}} {{x.nume}} {{x.prenume}}</h4>
+                        <p>Lucrari publicate: </p>
+                    </li>
+                </ul>
+            </div> <!-- END afisare autori gasiti -->
+            <div class="col-md-4"> <!-- START afisare grupuri, etc -->
+                &nbsp;
+            </div> <!-- END afisare grupuri, etc -->
+            <div class="col-md-4">
+                &nbsp;
+            </div>
+        </div>
     </div>
     
 

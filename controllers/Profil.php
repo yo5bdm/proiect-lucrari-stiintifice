@@ -13,7 +13,7 @@ class Profil extends Controller {
     );
     
     public function view($id) { //cei neinregistrati pot vedea un anumit autor
-        
+        $this->setData(['id' => $id]);
     }
     
     
