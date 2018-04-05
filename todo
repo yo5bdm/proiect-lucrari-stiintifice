@@ -2,16 +2,10 @@
 ISI - cea mai tare
 ISI proc
 BDI - baze de date indexate
-- de modificat adaugare/editare lucrare sa se poata adauga/modifica tipul indexarii
 - pe pagina de lucrari si principala - ordonare dupa tipul indexarii
 
 
 - view autor
-
-- de modificat pagina site/index google-like (casuta de cautare), 
-afiseaza autor/lucrare/departamente/etc cu 
-numararea autorilor, lucrarilor, citarilor, etc
-
 
 
 Users <- Grupuri <- Departamente <- Facultati

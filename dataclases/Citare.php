@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Citare extends Object {
+class Citare extends Obiect {
     public $descriere;
     public $an;
     public $urlLocal;

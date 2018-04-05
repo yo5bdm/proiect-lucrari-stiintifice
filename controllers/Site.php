@@ -20,7 +20,6 @@ class Site extends Controller {
         if(App::$app->isPost()) { 
             $userModel = new Users();
             $user = $userModel->verificare(App::$app->post['username'],App::$app->post['password']);
-            print_r($user);
             if($user!=false) {
                 Loggeduser::login($user);
                 $this->redirect(["c"=>"site","a"=>"index"]);

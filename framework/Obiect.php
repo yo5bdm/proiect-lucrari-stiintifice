@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Object {
+class Obiect {
     
     public function getSettings($text) {
         if(!isset($this->settings)) return NULL;

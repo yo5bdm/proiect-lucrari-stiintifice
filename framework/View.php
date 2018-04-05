@@ -16,7 +16,7 @@ class View {
     
     public function __construct() {
         $this->title = ucfirst(App::$app->settings->numeAplicatie)." - ".ucfirst(App::$app->route->controller)." > ".ucfirst(App::$app->route->action);
-        @$this->viewFolder = dirname(__FILE__,2) . "view";
+        @$this->viewFolder = dirname(__FILE__,2) . "/view";
         $this->json = false;
     }
     

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Facultate extends Object {
+class Facultate extends Obiect {
     protected $id;
     public $denumire;
     

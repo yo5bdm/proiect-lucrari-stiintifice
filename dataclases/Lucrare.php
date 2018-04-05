@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-class Lucrare extends Object {
+class Lucrare extends Obiect {
     private $id;
     public $titlu;
     public $autori=array();

@@ -6,7 +6,3 @@
  * and open the template in the editor.
  */
 
-class Departament extends Obiect {
-    protected $id;
-    public $denumire;
-}

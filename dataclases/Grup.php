@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Grup extends Object {
+class Grup extends Obiect {
     protected $id;
     public $denumire;
 }

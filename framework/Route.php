@@ -47,6 +47,7 @@ class Route {
                     $this->parametrii[key($comanda[$i])] = $comanda[$i];
                 }
         }
+        $this->controller = ucfirst($this->controller);
     }
     
     private function proceseaza() {
