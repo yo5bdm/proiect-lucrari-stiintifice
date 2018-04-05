@@ -31,7 +31,7 @@
                             <div class="col-xs-8" ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal" >
                                 <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
                                 <p>Anul publicarii {{x.anulPublicarii}}; {{getText(x.volum,'Vol:')}}, {{getText(x.pagini,'Pag:')}}</p>
-                                <p>{{getText(x.conferinta,'Conferinta:')}}, Citări: {{x.citari.length}}</p>
+                                <p>{{getText(x.conferinta,'Conferinta:')}}, Citări: {{x.citari.length}}, Indexare {{getIndexareText(x.indexare)}}</p>
                                 <p></p>
                             </div>
                             <div class="col-xs-4">
@@ -56,6 +56,7 @@
                     </div>
                         <div class="modal-body">
                         <p>Autori: {{autori(md.id)}}</p>
+                        <p>Indexare {{getIndexareText(md.indexare)}}</p>
                         <hr>
                         <p>{{md.abstract}}</p>
                         <hr>
@@ -67,8 +68,12 @@
                             <a href='{{md.linkLocal}}'>LOCAL</a>
                         </p>
                         <p>Citări:</p>
-                        <canvas id="bar" class="chart chart-bar"
-  chart-data="data" chart-labels="labels"> chart-series="series"
+                        <canvas id="bar" 
+                                class="chart chart-bar" 
+                                chart-options="options"
+                                chart-data="data" 
+                                chart-labels="labels"> 
+                                    chart-series="series"
                         </canvas>
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="c in md.citari">
@@ -101,7 +106,17 @@ var app = angular.module("myApp", ['chart.js']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.propertyName = 'anulPublicarii';
     $scope.reverse = true;
-            
+    $scope.options ={ //optiuni pentru chart.js
+        scales: {
+            yAxes: [{
+                type: 'linear',
+                ticks: {
+                    beginAtZero: true,
+                    stepSize: 1
+                }
+            }]
+        }
+    };            
     $scope.json={};
     $scope.json.autori=[];
     $scope.lucrari=[];
@@ -115,10 +130,16 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             $scope.json.autori = response.data;
         });
     };
+    $scope.getIndexari = function() {
+        $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getcategorii"])?>').then(function(response){
+            $scope.json.indexari = response.data;
+        }); 
+    };
     //metode
     Promise.all([
         $scope.getLucrari(),
-        $scope.getAutori()
+        $scope.getAutori(),
+        $scope.getIndexari()
     ]).then(function(data){
         $scope.labels = []; //http://www.chartjs.org/docs/latest/
         $scope.data = [];   //http://jtblin.github.io/angular-chart.js/
@@ -192,6 +213,10 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             if(text == null || text.length == 0) return "";
             else return add+" "+text;
         };
+        $scope.getIndexareText = function(ids) {
+            if(ids) return $scope.json.indexari.find(ind => Number(ind.id) === Number(ids) ).denumire;
+        };
+            
         $scope.modal = function(id) {
             $scope.currentId = id;
             $scope.md = $scope.getLucrare(id);

@@ -10,6 +10,7 @@ class Lucrare extends Object {
     public $titlu;
     public $autori=array();
     public $abstract;
+    public $indexare;
     public $volum;
     public $pagini;
     public $conferinta;

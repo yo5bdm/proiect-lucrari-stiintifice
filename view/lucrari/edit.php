@@ -21,7 +21,13 @@
                 <p>Autori selectati: 
                     <span ng-repeat="x in lucrare.autori"> {{getNameById(x)}},</span>
                 </p>
-                <p></p><p><textarea placeholder="Abstract" class="form-control" rows="6" name="abstract" ng-model="lucrare.abstract"></textarea></p>
+                <hr/>
+                <p>Indexare 
+                    <select class="form-control" ng-model="lucrare.indexare">
+                        <option ng-repeat="x in json.indexari" value="{{x.id}}">{{x.denumire}}</option>
+                    </select>
+                </p>
+                <p><textarea placeholder="Abstract" class="form-control" rows="6" name="abstract" ng-model="lucrare.abstract"></textarea></p>
                 <p><input name="volum" ng-model="lucrare.volum" placeholder="Volum" class="form-control" type="text"></p>
                 <p><input name="pagini" ng-model="lucrare.pagini" placeholder="Pagini" class="form-control" type="text"></p>
                 <p><input name="conferinta" ng-model="lucrare.conferinta" placeholder="Conferinta" class="form-control" type="text"></p>
@@ -87,10 +93,16 @@ app.controller("myCtrl", ['$scope','$http',function($scope,$http) {
             $scope.lucrare = response.data;
         });
     };
+    $scope.getIndexari = function() {
+        $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getcategorii"])?>').then(function(response){
+            $scope.json.indexari = response.data;
+        }); 
+    };
             
 Promise.all([
     $scope.getAutori(),
-    $scope.getLucrarea()
+    $scope.getLucrarea(),
+    $scope.getIndexari()
 ]).then(function(){
     $scope.currentUser = {"id":"<?=App::$app->user->getId()?>","nume":"<?=App::$app->user->getName()?>"};
     

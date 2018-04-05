@@ -106,6 +106,9 @@ class Date extends Model {
     public function updateCategorii($cat) {
         $this->data['Date']['Categorii'] = $cat;
     }
+    public function getCategorii() {
+        return $this->data['Date']['Categorii'];
+    }
 
     // METODE PRIVATE
     private function updateLucrare($index, $lucrare) {
@@ -113,6 +116,7 @@ class Date extends Model {
             'titlu',
             'autori',
             'abstract',
+            'indexare',
             'volum',
             'pagini',
             'conferinta',
