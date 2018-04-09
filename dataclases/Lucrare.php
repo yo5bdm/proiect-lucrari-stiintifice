@@ -9,6 +9,7 @@ class Lucrare extends Obiect {
     private $id;
     public $titlu;
     public $autori=array();
+    public $bazededate = array();
     public $abstract;
     public $indexare;
     public $volum;

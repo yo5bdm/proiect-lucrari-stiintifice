@@ -130,4 +130,19 @@ class Json extends Controller {
         $this->setData($db->getCategorii());
     }
     
+    public function savebazededate() {
+        if($this->getJson()!=NULL) {
+            $json = $this->getJson();
+            $date = new Date();
+            $date->updateDBs($json['datele']);
+            $this->setData('1');
+        } else {
+            $this->setData('0');
+        }
+    }
+    public function getbazededate() {
+        $db = new Date();
+        $this->setData($db->getDBs());
+    }
+    
 }

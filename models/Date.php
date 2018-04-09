@@ -106,8 +106,14 @@ class Date extends Model {
     public function updateCategorii($cat) {
         $this->data['Date']['Categorii'] = $cat;
     }
+    public function updateDBs($dbs) {
+        $this->data['Date']['BazeDeDate'] = $dbs;
+    }
     public function getCategorii() {
         return $this->data['Date']['Categorii'];
+    }
+    public function getDBs() {
+        return $this->data['Date']['BazeDeDate'];
     }
 
     // METODE PRIVATE
@@ -116,6 +122,7 @@ class Date extends Model {
             'titlu',
             'autori',
             'abstract',
+            'bazededate',
             'indexare',
             'volum',
             'pagini',
