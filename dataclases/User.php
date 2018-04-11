@@ -51,9 +51,11 @@ class User extends Obiect {
         return $this;
     }
     
-    public function asArray() {
+    public function asArray($save=false) {
+        
         $arr = array();
-        $ar = array('id','nume', 'prenume', 'username', 'email', 'functia');
+        if($save) $ar = array('id','nume', 'prenume','password', 'username', 'email', 'functia');
+        else $ar = array('id','nume', 'prenume', 'username', 'email', 'functia');
         foreach($ar as $a) {
             $arr[$a]=$this->$a;
         }

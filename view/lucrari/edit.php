@@ -18,20 +18,33 @@
                     </span>
                 </div>
                 <p></p>
-                <p>Autori selectati: 
-                    <span ng-repeat="x in lucrare.autori"> {{getNameById(x)}},</span>
-                </p>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="x in lucrare.autori">{{getNameById(x)}}
+                        <span class="glyphicon glyphicon-remove pull-right" title="Sterge autorul" ng-click="stergeAutorul($index)"></span>
+                    </li>
+                </ul>
                 <hr/>
                 <p>Indexare 
                     <select class="form-control" ng-model="lucrare.indexare">
                         <option ng-repeat="x in json.indexari" value="{{x.id}}">{{x.denumire}}</option>
                     </select>
                 </p>
+                <hr/>
+                <p>Baze de date ce indexează lucrarea:
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="x in lucrare.bazededate">
+                        <a href="{{x.link}}">{{getDBText(x.id).denumire}}</a>
+                        <span class="glyphicon glyphicon-remove pull-right" ng-click="stergeDB(x.id)"></span>
+                    </li>
+                </ul>
+                </p>
+                <p><button data-toggle="modal" data-target="#myModal2" class="form-control btn btn-default">Adaugă bază de date</button></p>
+                <hr/>
                 <p><textarea placeholder="Abstract" class="form-control" rows="6" name="abstract" ng-model="lucrare.abstract"></textarea></p>
                 <p><input name="volum" ng-model="lucrare.volum" placeholder="Volum" class="form-control" type="text"></p>
                 <p><input name="pagini" ng-model="lucrare.pagini" placeholder="Pagini" class="form-control" type="text"></p>
                 <p><input name="conferinta" ng-model="lucrare.conferinta" placeholder="Conferinta" class="form-control" type="text"></p>
-                <p><input name="anulPublicarii" ng-model="lucrare.anulPublicarii" placeholder="AnulPublicarii" class="form-control" type="text"></p>
+                <p><input type="number" name="anulPublicarii" ng-model="lucrare.anulPublicarii" placeholder="AnulPublicarii" class="form-control"></p>
                 <p><input name="link" ng-model="lucrare.link" placeholder="Link" class="form-control" type="text"></p>
                 <p><input name="linkLocal" ng-model="lucrare.linkLocal" placeholder="LinkLocal" class="form-control" type="text"></p>
                 <hr/>
@@ -71,7 +84,32 @@
 
   </div>
 </div>
-                <!-- END NG-APP -->
+   
+<!-- MODAL ADAUGARE Baze de date -->
+<div id="myModal2" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Bază de date ce indexează lucrarea</h4>
+        </div>
+        <div class="modal-body">
+            <select class="form-control" ng-model="bazadedate.id">
+                <option ng-repeat="x in json.bazededate" value="{{x.id}}">{{x.denumire}}</option>
+            </select> <br/>
+            <input type="text" class="form-control" ng-model="bazadedate.link" placeholder="Link"/>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" ng-click="addDB()">Salvează</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Închide</button>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- END NG-APP -->
 </div>
 </div>
 
@@ -82,6 +120,16 @@ app.controller("myCtrl", ['$scope','$http',function($scope,$http) {
     $scope.json = {};
     $scope.lucrare = {};
     $scope.lucrareID = <?=$this->data['id']?>;
+    $scope.citare = {
+        descriere:"",
+        an:"<?=date('Y')?>",
+        urlLocal:"",
+        urlRemote:""
+    }; 
+    $scope.bazadedate = {
+        id:'1',
+        link:""
+    };
     
     $scope.getAutori = function() {
         return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getusers"])?>').then(function(response){
@@ -94,29 +142,33 @@ app.controller("myCtrl", ['$scope','$http',function($scope,$http) {
         });
     };
     $scope.getIndexari = function() {
-        $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getcategorii"])?>').then(function(response){
+        return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getcategorii"])?>').then(function(response){
             $scope.json.indexari = response.data;
+        }); 
+    };
+    $scope.getBazeDeDate = function() {
+        return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getbazededate"])?>').then(function(response){
+            $scope.json.bazededate = response.data;
         }); 
     };
             
 Promise.all([
     $scope.getAutori(),
     $scope.getLucrarea(),
-    $scope.getIndexari()
+    $scope.getIndexari(),
+    $scope.getBazeDeDate()
 ]).then(function(){
     $scope.currentUser = {"id":"<?=App::$app->user->getId()?>","nume":"<?=App::$app->user->getName()?>"};
-    
-    $scope.citare = {};
-    $scope.citare.descriere="";
-    $scope.citare.an="<?=date('Y')?>";
-    $scope.citare.urlLocal="";
-    $scope.citare.urlRemote="";
-    
-    $scope.filtru ={};
-    $scope.filtru.autori="<?=App::$app->user->getId()?>";
-    $scope.filtru.citari="";
+     
+    $scope.filtru ={
+        autori:"<?=App::$app->user->getId()?>",
+        citari:""
+    };
     $scope.addAutori = function() {
         $scope.lucrare.autori.push($scope.filtru.autori);
+    };
+    $scope.stergeAutorul = function(index) {
+        $scope.lucrare.autori.splice(index,1);
     };
     $scope.addCitare = function() {
         var citare = {
@@ -142,6 +194,26 @@ Promise.all([
         }
     };
     
+    $scope.getDBText = function(id) {
+        return $scope.json.bazededate.find(function(val){
+            return val.id == id;
+        });
+    };
+    $scope.addDB = function() {
+        var db = {
+            id:$scope.bazadedate.id,
+            link:$scope.bazadedate.link
+        };
+        $scope.lucrare.bazededate.push(db);
+    };
+    $scope.stergeDB = function(ids) {
+        for(var i=0;i<$scope.lucrare.bazededate.length;i++) {
+            if($scope.lucrare.bazededate[i].id == ids) {
+                $scope.lucrare.bazededate.splice(i,1);
+            }
+        }
+    }
+    
     $scope.salveaza = function() {
         var param = {
             lucrareid:$scope.lucrareID,
@@ -154,11 +226,15 @@ Promise.all([
             }
         };
         $http.post("<?= Helpers::generateUrl(['c'=>'json','a'=>'updatelucrare'])?>/",param,config).then(function(response){
-            console.log(response);
+            if(response.data==1) alert("Modificări salvate");
+            else alert("Eroare la salvare");
         });
     };
     $scope.$apply(function(){ //bug afisare dupa finalizare incarcare
         $scope.getNameById($scope.currentUser.id);
+        if(!$scope.lucrare.hasOwnProperty('bazededate')) {
+            $scope.lucrare.bazededate = [];
+        }
     });
 });
 }]);

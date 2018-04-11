@@ -19,9 +19,11 @@
                     </span>
                 </div>
                 <p></p>
-                <p>Autori selectati: 
-                    <span ng-repeat="x in lucrare.autori"> {{getNameById(x)}},</span>
-                </p>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="x in lucrare.autori">{{getNameById(x)}}
+                        <span class="glyphicon glyphicon-remove pull-right" title="Sterge autorul" ng-click="stergeAutorul($index)"></span>
+                    </li>
+                </ul>
                 <hr/>
                 <p>Indexare 
                     <select class="form-control" ng-model="lucrare.indexare">
@@ -122,6 +124,9 @@ Promise.all([
     $scope.filtru.citari="";
     $scope.addAutori = function() {
         $scope.lucrare.autori.push($scope.filtru.autori);
+    };
+    $scope.stergeAutorul = function(index) {
+        $scope.lucrare.autori.splice(index,1);
     };
     $scope.addCitare = function() {
         var citare = {
