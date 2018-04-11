@@ -36,8 +36,6 @@
                 </ul> <!-- END afisare lucrari gasite -->        
         
         
-        
-        
             </div>
         </div> 
         <div class="row">

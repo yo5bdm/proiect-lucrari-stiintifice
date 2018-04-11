@@ -38,7 +38,7 @@ class Site extends Controller {
         if(App::$app->isPost()) {
             $user = new User();
             $user->fromPost();
-            if($userModel->insertData($user->asArray())) {
+            if($userModel->insertData($user->asArray(true))) {
                 $this->alert("Utilizatorul a fost salvat, va rugam sa va logati");
                 $this->redirect(["c"=>"site","a"=>"login"]);
             } else {

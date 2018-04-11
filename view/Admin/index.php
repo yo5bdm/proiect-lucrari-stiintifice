@@ -1,7 +1,7 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="panel panel-default">
-            <div class="panel-heading"><h4>Adaugă / modifică opțiunile pentru tipul de indexare:</h4></div>
+            <div class="panel-heading"><h4>Opțiuni pentru tipul de indexare:</h4></div>
             <div class="panel-body">        
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="x in json.Categorii | orderBy:id">
@@ -21,7 +21,7 @@
         </div>
     </div>
     
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading"><h4>Baze de date:</h4></div>
             <div class="panel-body">
@@ -36,6 +36,21 @@
                 <p>Adaugă o bază de date nouă:</p>
                 <input class="form-control" ng-model="form.denumireDB" placeholder="Denumire bază de date"/> <br/>
                 <button ng-click="adaugaDB()" class="form-control btn btn-success">Adaugă categoria</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h4>Lista de utilizatori</h4></div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="x in json.utilizatori">
+                        {{x.denumire}}
+                        <span class="glyphicon glyphicon-remove pull-right" title="Sterge selectia" ng-click="stergeDB(x.id)"></span>                        
+                    </li>
+                    <li class="list-group-item list-group-item-info" ng-hide="json.BazeDeDate.length">Nu sunt baze de date de afisat</li>
+                </ul>
             </div>
         </div>
     </div>

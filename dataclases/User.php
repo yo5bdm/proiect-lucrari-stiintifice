@@ -52,13 +52,10 @@ class User extends Obiect {
     }
     
     public function asArray($save=false) {
-        
         $arr = array();
-        if($save) $ar = array('id','nume', 'prenume','password', 'username', 'email', 'functia');
-        else $ar = array('id','nume', 'prenume', 'username', 'email', 'functia');
-        foreach($ar as $a) {
-            $arr[$a]=$this->$a;
-        }
+        if($save) { $ar = array('id','nume', 'prenume','password', 'username', 'email', 'functia'); }
+        else { $ar = array('id','nume', 'prenume', 'username', 'email', 'functia'); }
+        foreach($ar as $a) { $arr[$a]=$this->$a; }
         return $arr;
     }
  

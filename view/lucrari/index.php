@@ -117,9 +117,16 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             }]
         }
     };            
-    $scope.json={};
-    $scope.json.autori=[];
+    $scope.json={
+        autori:[],
+        indexari:[]
+    };
     $scope.lucrari=[];
+    $scope.myId = "<?=App::$app->user->getId()?>";
+    $scope.filtru="";
+    $scope.currentId;
+    $scope.md = {};
+    
     $scope.getLucrari = function() { 
         return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"utilizator","id"=>App::$app->user->getId()])?>').then(function(response){
             $scope.lucrari = response.data;
@@ -135,6 +142,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             $scope.json.indexari = response.data;
         }); 
     };
+    
     //metode
     Promise.all([
         $scope.getLucrari(),
@@ -177,10 +185,6 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             return ret;
         };
         
-        $scope.myId = "<?=App::$app->user->getId()?>";
-        $scope.filtru="";
-        $scope.currentId;
-        $scope.md = {};
         $scope.getLucrare = function(ids) {
             var lucrare;
             for(var i=0;i<$scope.lucrari.length;i++) {
@@ -238,7 +242,6 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         $scope.$apply(function(){
             $scope.getAutorName($scope.myId);
         });
-        
         
     });
 }]);

@@ -212,7 +212,7 @@ Promise.all([
                 $scope.lucrare.bazededate.splice(i,1);
             }
         }
-    }
+    };
     
     $scope.salveaza = function() {
         var param = {
