@@ -45,7 +45,7 @@
                 <p><input name="volum" ng-model="lucrare.volum" placeholder="Volum" class="form-control" type="text"></p>
                 <p><input name="pagini" ng-model="lucrare.pagini" placeholder="Pagini" class="form-control" type="text"></p>
                 <p><input name="conferinta" ng-model="lucrare.conferinta" placeholder="Conferinta" class="form-control" type="text"></p>
-                <p><input name="anulPublicarii" ng-model="lucrare.anulPublicarii" placeholder="AnulPublicarii" class="form-control" type="text"></p>
+                <p><input type="number" name="anulPublicarii" ng-model="lucrare.anulPublicarii" placeholder="AnulPublicarii" class="form-control" type="text"></p>
                 <p><input name="link" ng-model="lucrare.link" placeholder="Link" class="form-control" type="text"></p>
                 <p><input name="linkLocal" ng-model="lucrare.linkLocal" placeholder="LinkLocal" class="form-control" type="text"></p>
                 <hr/>
