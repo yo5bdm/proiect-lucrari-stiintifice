@@ -6,6 +6,6 @@
  * and open the template in the editor.
  */
 
-class Html {
+class Html extends Helpers {
     
 }

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Form extends Helpers {
+class Form extends Html {
     private $class;
     private $props;
     private $ngModel=null;
