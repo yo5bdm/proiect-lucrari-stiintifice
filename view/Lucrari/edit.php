@@ -74,8 +74,11 @@
             <h4 class="modal-title">Adauga citare</h4>
         </div>
             <div class="modal-body">
-            <?=Helpers::formular(new Citare(), 'citare')?>
-        </div>
+                <?php 
+                    $form = new Form(new Citare());
+                    echo $form->setNgModel('citare')->setAllRequired(false)->generate();
+                ?>
+            </div>
         <div class="modal-footer">
             <button class="btn btn-success" ng-click="addCitare()">Salvează</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Închide</button>
@@ -120,6 +123,15 @@ app.controller("myCtrl", ['$scope','$http',function($scope,$http) {
     $scope.json = {};
     $scope.lucrare = {};
     $scope.lucrareID = <?=$this->data['id']?>;
+    $scope.currentUser = {
+        id:"<?=App::$app->user->getId()?>",
+        nume:"<?=App::$app->user->getName()?>"
+    };
+  
+    $scope.filtru ={
+        autori:"<?=App::$app->user->getId()?>",
+        citari:""
+    };
     $scope.citare = {
         descriere:"",
         an:"<?=date('Y')?>",
@@ -158,12 +170,7 @@ Promise.all([
     $scope.getIndexari(),
     $scope.getBazeDeDate()
 ]).then(function(){
-    $scope.currentUser = {"id":"<?=App::$app->user->getId()?>","nume":"<?=App::$app->user->getName()?>"};
-     
-    $scope.filtru ={
-        autori:"<?=App::$app->user->getId()?>",
-        citari:""
-    };
+    
     $scope.addAutori = function() {
         $scope.lucrare.autori.push($scope.filtru.autori);
     };

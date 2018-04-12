@@ -113,7 +113,11 @@ class Json extends Controller {
     
     public function admin() { //toate datele necesare pe pagina de admin
         $date = new Date();
-        $this->setData($date->getData());
+        $usr = new Users();
+        $d = array();
+        $d = $date->getData();
+        $d['Users'] = $usr->getNameList();
+        $this->setData($d);
     }
     public function savecategorii() {
         if($this->getJson()!=NULL) {

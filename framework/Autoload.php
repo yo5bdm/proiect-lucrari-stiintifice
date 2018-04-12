@@ -11,7 +11,8 @@ spl_autoload_register(function ($className) {
         'controllers',
         'models',
         'settings',
-        'dataclases'
+        'dataclases',
+        'helpers'
     );
     foreach($dirs as $directory) {
         $file = __DIR__ . '/../'.$directory.DS.$className.".php";

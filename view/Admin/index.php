@@ -1,5 +1,5 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading"><h4>Opțiuni pentru tipul de indexare:</h4></div>
             <div class="panel-body">        
@@ -21,7 +21,7 @@
         </div>
     </div>
     
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading"><h4>Baze de date:</h4></div>
             <div class="panel-body">
@@ -40,14 +40,13 @@
         </div>
     </div>
     
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading"><h4>Lista de utilizatori</h4></div>
             <div class="panel-body">
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="x in json.utilizatori">
-                        {{x.denumire}}
-                        <span class="glyphicon glyphicon-remove pull-right" title="Sterge selectia" ng-click="stergeDB(x.id)"></span>                        
+                    <li class="list-group-item" ng-repeat="x in json.Users">
+                        {{x.functia}} <strong>{{x.nume}} {{x.prenume}}</strong> <span class="pull-right">{{x.email}}</span>                      
                     </li>
                     <li class="list-group-item list-group-item-info" ng-hide="json.BazeDeDate.length">Nu sunt baze de date de afisat</li>
                 </ul>

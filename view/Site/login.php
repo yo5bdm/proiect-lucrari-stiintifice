@@ -7,8 +7,8 @@
             </div>
             <div class="panel-body">
                 <form action="" method="POST">
-                    <p><input type="text" name="username" placeholder="Numele de utilizator" class="form-control"/></p>
-                    <p><input type="password" name="password" placeholder="Parola" class="form-control"/></p>
+                    <p><input type="text" name="username" placeholder="Numele de utilizator" class="form-control" required="required"/></p>
+                    <p><input type="password" name="password" placeholder="Parola" class="form-control" required="required"/></p>
                     
                     <p><input type="submit" class="form-control btn btn-success" value="Login"/></p>
                 </form>

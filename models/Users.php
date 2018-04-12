@@ -7,6 +7,8 @@
  */
 
 class Users extends Model {
+    private $error='';
+    
     public function insertData($date) {
         $date['id'] = $this->getID();
         $date['admin'] = FALSE;
@@ -82,4 +84,32 @@ class Users extends Model {
         }
         return false;
     }
-}
+    public function validateUser($user) {
+        $req = array('nume','prenume','username','password','email','functia');
+        foreach($req as $field) { //if any is empty
+            if(strlen($user->$field)==0) { 
+                $this->error = "Nu ati completat toate datele obligatorii!";
+                return false; 
+            }
+        }
+        foreach($this->data['Users'] as $dbuser) { //check if any exists
+            if(strcasecmp($user->nume, $dbuser['nume'])==0 && 
+               strcasecmp($user->prenume, $dbuser['prenume'])==0) { 
+                    $this->error = "Combinatia de nume si prenume exista deja in baza de date!";
+                    return false; 
+               }
+            if(strcasecmp($user->username, $dbuser['username'])==0){ 
+                    $this->error = "Numele de utilizator exista deja! Va rugam sa alegeti alt nume de utilizator";
+                    return false; 
+               }
+            if(strcasecmp($user->email, $dbuser['email'])==0){ 
+                    $this->error = "E-mailul a mai fost folosit! Va rugam sa folositi alt email. Daca sunteti sigur ca aceasta este adresa Dvs de e-mail, va rugam sa incercati recuperarea contului.";
+                    return false; 
+               }
+        }
+        return true; //everything ok
+    }
+    public function getError() {
+        return $this->error;
+    }
+} 

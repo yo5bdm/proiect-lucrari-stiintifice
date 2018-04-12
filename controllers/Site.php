@@ -38,11 +38,15 @@ class Site extends Controller {
         if(App::$app->isPost()) {
             $user = new User();
             $user->fromPost();
-            if($userModel->insertData($user->asArray(true))) {
+            if(!$userModel->validateUser($user)) {
+                $this->alert($userModel->getError());
+                $this->setData($user);
+            } elseif($userModel->insertData($user->asArray(true))) {
                 $this->alert("Utilizatorul a fost salvat, va rugam sa va logati");
                 $this->redirect(["c"=>"site","a"=>"login"]);
             } else {
                 $this->alert("Datele introduse nu sunt corecte!");
+                $this->setData($user);
                 //mergi inapoi la inregistrare
             }
         }

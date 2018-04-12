@@ -7,7 +7,13 @@
             </div>
             <div class="panel-body">
                 <form action="" method="POST">
-                    <?= Helpers::formular(new User(),null,false)?>
+                    <?php $form = new Form(new User());
+                    echo $form->setAllRequired(true)
+                            ->dontPrintArrays()
+                            ->excludeField('group')
+                            ->printPostValues($this->data)
+                            ->generate();
+                    ?>
                     <p><input type="submit" class="form-control btn btn-success" value="Salveaza"/></p>
                 </form>
             </div>

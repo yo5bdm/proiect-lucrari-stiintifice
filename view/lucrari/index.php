@@ -1,5 +1,5 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
-    <div class="col-md-8">
+    <div class="col-md-10">
         <div class="row">    
             <div class="col-xs-12" >
                 <div class="row">
@@ -19,6 +19,7 @@
                 <p ng-show="lucrari.length>0">Sortează după: 
                     <button ng-click="propertyName = 'titlu'" 
                             ng-class="{'btn btn-success':propertyName=='titlu', 'btn btn-default':propertyName!='titlu'}">Titlu</button>
+                    <button ng-click="propertyName = 'indexare'" ng-class="{'btn btn-success':propertyName=='indexare', 'btn btn-default':propertyName!='indexare'}">Indexare</button>
                     <button ng-click="propertyName = 'autori'" ng-class="{'btn btn-success':propertyName=='autori', 'btn btn-default':propertyName!='autori'}">Autor</button>
                     <button ng-click="propertyName = 'anulPublicarii'" ng-class="{'btn btn-success':propertyName=='anulPublicarii', 'btn btn-default':propertyName!='anulPublicarii'}">Anul publicării</button> | 
                     <button ng-click="reverse = false" ng-class="{'btn btn-success':reverse!=true, 'btn btn-default':reverse==true}"><span class="glyphicon glyphicon-arrow-up"></span></button> 
@@ -95,16 +96,22 @@
         </div>
     </div>
 </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
         <h2>Sidebar</h2>
-        <p>Actiuni lucrari, descarcari, exporturi, etc</p>
+        <p>Formatul dorit pentru nume autor:
+            <select class="form-control" ng-model="formatNume">
+                <option ng-repeat="x in optiuniFormatNume" value="{{$index}}">{{x}}</option>
+            </select>
+        </p>
     </div>
-</div>
+</div> 
 
 <script type="text/javascript">
 var app = angular.module("myApp", ['chart.js']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.propertyName = 'anulPublicarii';
+    $scope.formatNume = '1';
+    $scope.optiuniFormatNume = formatNume;
     $scope.reverse = true;
     $scope.options ={ //optiuni pentru chart.js
         scales: {
@@ -209,7 +216,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             var listaAutori = $scope.json.autori;
             for(var i=0; i<listaAutori.length; i++) {
                 if(listaAutori[i].id == Number(ids)) 
-                    return listaAutori[i].nume + " " + listaAutori[i].prenume;
+                    return afiseazaNume(listaAutori[i].nume,listaAutori[i].prenume,$scope.formatNume);
             }
             return ids;
         };

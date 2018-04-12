@@ -7,12 +7,12 @@
  */
 
 class Settings {
-    public $layout = 'layout.php';
-    public $numeAplicatie = "Lucrări Stiințifice";
+    public $layout = 'layout.php'; //layout used by app
+    public $numeAplicatie = "Lucrări Stiințifice"; //name printed on menu bar
     public $autori = "Erdei Rudolf, Lung Tudor";
-    public $url ="http://localhost/lucraristiintifice";
-    public $useIndex = false;
-    public $index = "index.php?c=";
+    public $url ="http://localhost/lucraristiintifice"; //used in link generation
+    public $useIndex = false; //if htacces is enabled, don't use $index in link generation
+    public $index = "index.php?c="; //
     public $webRoot = "web";
     public $appFolder = "/lucraristiintifice/"; //string gol daca nu e in subfolder
     
@@ -24,7 +24,7 @@ class Settings {
     public $jsFiles = array(
         'angular.min',
         'jquery-3.3.1.min',
-        //'chart',
+        'functii',
         'angular-chart.min'
         //'typeahead.bundle'
     );
@@ -67,6 +67,15 @@ class Settings {
     
     
     // NU MODIFICATI DUPA ACEST PUNCT NIMIC
+    public function __construct() {
+        if($this->debug == true) { //enable debug
+            error_reporting(E_ALL);
+            ini_set('display_errors', 'On');
+        } else {
+            error_reporting(0);
+            ini_set('display_errors', 'Off');
+        }
+    }
     public function siteRoot() {
         if($this->useIndex==false) {
             return $this->url;

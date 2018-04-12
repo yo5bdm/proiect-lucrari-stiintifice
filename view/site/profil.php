@@ -1,7 +1,7 @@
 <style>
 .input-group-addon {
     min-width:8em;
-    text-align:right;
+    text-align:right; 
 }
 </style>
 <div class="row" ng-app="myApp" ng-controller="myCtrl">

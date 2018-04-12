@@ -75,7 +75,10 @@
             <h4 class="modal-title">Adauga citare</h4>
         </div>
             <div class="modal-body">
-            <?=Helpers::formular(new Citare(), 'citare')?>
+                <?php 
+                    $form = new Form(new Citare());
+                    echo $form->setNgModel('citare')->setAllRequired(false)->generate();
+                ?>
         </div>
         <div class="modal-footer">
             <button class="btn btn-success" ng-click="addCitare()">Salvează</button>
@@ -128,7 +131,7 @@ app.controller("myCtrl", ['$scope','$http','$timeout', function($scope,$http,$ti
     $scope.lucrare = {
         titlu:"",
         abstract:"",
-        indexare='1',
+        indexare:'1',
         volum:"",
         pagini:"",
         conferinta:"",
@@ -232,7 +235,7 @@ Promise.all([
         $scope.lucrare.pagini="";
         $scope.lucrare.conferinta="";
         $scope.lucrare.anulPublicarii="";
-        $scope.lucrare.link=""
+        $scope.lucrare.link="";
         $scope.lucrare.linkLocal="";
         $scope.lucrare.autori=[];
         $scope.lucrare.citari=[];

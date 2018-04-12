@@ -30,10 +30,6 @@ class App {
     
     private function __construct() {
         $this->settings = new Settings();
-        if($this->settings->debug == true) { //enable debug
-            error_reporting(E_ALL);
-            ini_set('display_errors', 'On');
-        }
         $this->user = Loggeduser::get();
     }
     

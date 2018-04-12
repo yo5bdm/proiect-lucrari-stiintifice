@@ -1,7 +1,7 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
     <div class="col-xs-12">
         <div ng-show="form.modificari" class="alert alert-warning" role="alert">Există modificări, vă rugăm salvați înainte de a părăsi pagina! <button ng-show="form.modificari" class="btn btn-danger" ng-click="saveUnitate()">Salvează modificările</button></div>
-        <div class="row">
+        <div class="row"> 
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading"><h4>Facultăți</h4></div>
