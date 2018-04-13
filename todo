@@ -9,3 +9,14 @@ BDI - baze de date indexate
 
 
 Users <- Grupuri <- Departamente <- Facultati
+
+Documente de iesire posibile:
+- lista lucrarilor unei persoane din toti anii (ordine: an descrescat)
+- lista lucrarilor unei persoane din ultimii N ani (frecvent N=1,5 sau 10)
+- lista lucrarilor unei persoane din ultimii N ani grupate pe ISI/ISI proc/BDI/-
+- lista lucrarilor unui //colectiv din ultimii N ani grupate pe ISI/ISI proc/BDI/-
+- sinteza lucrarilor / colective/departamente.. cate ISI / ISI proc / ISI BDI
+- lista ... cu bazele de date care au indexat articolele respective
+- lista ... cu numarul de citari
+- lista ... cu citarile aferente
+- etc..

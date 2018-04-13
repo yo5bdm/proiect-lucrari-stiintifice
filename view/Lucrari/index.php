@@ -1,15 +1,10 @@
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
-    <div class="col-md-10">
+    <div class="col-md-9">
         <div class="row">    
             <div class="col-xs-12" >
                 <div class="row">
                     <div class="col-xs-8">
                         <h3>Lucrarile utilizatorului <?=App::$app->user->getName()?></h3>
-                    </div>
-                    <div class="col-xs-4 filtrare">
-                        <div class="navbar-form navbar-right">
-                            <input type="text" ng-model="filtru" class="form-control" placeholder="Filtrează"/>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -25,25 +20,29 @@
                     <button ng-click="reverse = false" ng-class="{'btn btn-success':reverse!=true, 'btn btn-default':reverse==true}"><span class="glyphicon glyphicon-arrow-up"></span></button> 
                     <button ng-click="reverse = true" ng-class="{'btn btn-success':reverse==true, 'btn btn-default':reverse!=true}"><span class="glyphicon glyphicon-arrow-down"></span></button>
                 </p>
-                <ul class="list-group" ng-show="lucrari.length>0" >
-                    <li class="list-group-item" 
-                        ng-repeat="x in lucrari | filter: filtru | orderBy:propertyName:reverse">
-                        <div class="row">
-                            <div class="col-xs-8" ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal" >
-                                <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
-                                <p>Anul publicarii {{x.anulPublicarii}}; {{getText(x.volum,'Vol:')}}, {{getText(x.pagini,'Pag:')}}</p>
-                                <p>{{getText(x.conferinta,'Conferinta:')}}, Citări: {{x.citari.length}}, Indexare {{getIndexareText(x.indexare)}}</p>
-                                <p></p>
-                            </div>
-                            <div class="col-xs-4">
-                                <p>Linkuri <a href='{{x.link}}'>REMOTE</a>; <a href='{{x.linkLocal}}'>LOCAL</a></p>
-                                <p>
-                                    <button ng-click="editeaza(x.id)" class="btn btn-success">Editeaza</button>&nbsp;
-                                    <button ng-click="sterge(x.id)" class="btn btn-danger">Sterge</button></p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                <table class="table-bordered table table-condensed" ng-show="lucrari.length>0">
+                    <tr>
+                        <th ng-show="vizibil.titlu">Titlu</th>
+                        <th ng-show="vizibil.autori">Autori</th>
+                        <th ng-show="vizibil.anPublicare">An publicare</th>
+                        <th ng-show="vizibil.indexare">Indexare</th>
+                        <th ng-show="vizibil.linkuri">Linkuri</th>
+                        <th ng-show="vizibil.actiuni">Actiuni</th>
+                    </tr>
+                    <tr ng-repeat="x in lucrariFiltrate() | orderBy:propertyName:reverse">
+                        <td  ng-show="vizibil.titlu" ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">{{x.titlu}}</td>
+                        <td ng-show="vizibil.autori">{{autori(x.id)}}</td>
+                        <td ng-show="vizibil.anPublicare">{{x.anulPublicarii}}</td>
+                        <td ng-show="vizibil.indexare">{{getIndexareText(x.indexare)}}</td>
+                        <td ng-show="vizibil.linkuri"><a href='{{x.link}}'>Remote</a> <a href='{{x.linkLocal}}'>Local</a></td>
+                        <td ng-show="vizibil.actiuni">
+                            <a ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal"><span title="Vizualizeaza" class="glyphicon glyphicon-zoom-in"></span></a>&nbsp;
+                            <a ng-click="editeaza(x.id)"><span title="Editeaza" class="glyphicon glyphicon-wrench"></span></a>&nbsp;
+                            <a ng-click="sterge(x.id)"><span title="Sterge" class="glyphicon glyphicon-remove"></span></a>
+                        </td>
+                    </tr>
+                    
+                </table>
 
         <!-- Modal -->
             <div id="myModal" class="modal fade" role="dialog">
@@ -96,19 +95,38 @@
         </div>
     </div>
 </div>
-    <div class="col-md-2">
-        <h2>Sidebar</h2>
+    <div class="col-md-3">
+        <p>Filtrare după text:<input type="text" ng-model="filtru" class="form-control" placeholder="Text"/></p>
+        <p>Ultimii x ani:<input type="number" ng-model="filtruAni" class="form-control" placeholder="Ultimii x ani"/></p>
+        <p><small>{{anMinim}}</small> <a class="pull-right" ng-click="resetFiltrare()">Reset</a></p>
+        <hr/>
         <p>Formatul dorit pentru nume autor:
             <select class="form-control" ng-model="formatNume">
                 <option ng-repeat="x in optiuniFormatNume" value="{{$index}}">{{x}}</option>
             </select>
         </p>
+        <hr/>
+        <h6>Coloane vizibile</h6>
+        <p><input type="checkbox" ng-model="vizibil.titlu"/> Titlu</p>
+        <p><input type="checkbox" ng-model="vizibil.autori"/> Autori</p>
+        <p><input type="checkbox" ng-model="vizibil.anPublicare"/> An publicare</p>
+        <p><input type="checkbox" ng-model="vizibil.indexare"/> Indexare</p>
+        <p><input type="checkbox" ng-model="vizibil.linkuri"/> Linkuri</p>
+        <p><input type="checkbox" ng-model="vizibil.actiuni"/> Actiuni</p>
     </div>
 </div> 
 
 <script type="text/javascript">
 var app = angular.module("myApp", ['chart.js']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
+    $scope.vizibil ={
+        titlu:true,
+        autori:true,
+        anPublicare:true,
+        indexare:true,
+        linkuri:false,
+        actiuni:true
+    };
     $scope.propertyName = 'anulPublicarii';
     $scope.formatNume = '1';
     $scope.optiuniFormatNume = formatNume;
@@ -130,9 +148,15 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     };
     $scope.lucrari=[];
     $scope.myId = "<?=App::$app->user->getId()?>";
-    $scope.filtru="";
+    $scope.filtru='';
+    $scope.filtruAni='Toti anii';
+    $scope.anMinim='Toti anii';
     $scope.currentId;
     $scope.md = {};
+    $scope.resetFiltrare = function() {
+        $scope.filtruAni = NaN;
+        $scope.filtru='';
+    };
     
     $scope.getLucrari = function() { 
         return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"utilizator","id"=>App::$app->user->getId()])?>').then(function(response){
@@ -246,6 +270,32 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             }
             
         };
+        
+        $scope.lucrariFiltrate = function() {
+            if((isNaN($scope.filtruAni) || $scope.filtruAni==0) && $scope.filtru.length==0) {
+                $scope.anMinim='Toti anii';
+                $scope.filtruAni = NaN;
+                return $scope.lucrari; 
+            }
+            if(Number($scope.filtruAni)!=0 && !isNaN($scope.filtruAni)) {
+                var anMinim = <?=date('Y')?>-$scope.filtruAni;
+                $scope.anMinim = anMinim + " - " +<?=date('Y')?>;
+            } else {
+                $scope.anMinim='Toti anii';
+                $scope.filtruAni = NaN;
+                var anMinim = 0;
+            }
+            if($scope.filtru.length!=0) var filtru = $scope.filtru;
+            else var filtru = null;
+            return $scope.lucrari.filter(function(lucrare){
+                return ((lucrare.titlu.indexOf(filtru) != -1 ||
+                    lucrare.abstract.indexOf(filtru) != -1 ||
+                    lucrare.volum.indexOf(filtru) != -1) &&
+                    Number(lucrare.anulPublicarii) >= Number(anMinim)
+                );
+            });
+        };
+        
         $scope.$apply(function(){
             $scope.getAutorName($scope.myId);
         });
