@@ -37,10 +37,11 @@ class Lucrare extends Obiect {
         array_push($this->autori,["id"=>App::$app->user->getId(),"nume"=>App::$app->user->getName()]);
     }
     
-    public function set($id,$titlu,$autori,$abstract,$volum,$pagini,$conferinta,$anulPublicarii,$link,$linkLocal,$citari) {
+    public function set($id,$titlu,$autori,$keywords,$abstract,$volum,$pagini,$conferinta,$anulPublicarii,$link,$linkLocal,$citari,$links=array()) {
         $this->id = $id;
         $this->titlu = $titlu;
         $this->autori = $autori;
+        $this->keywords = $keywords;
         $this->abstract = $abstract;
         $this->volum = $volum;
         $this->pagini = $pagini;
@@ -56,6 +57,9 @@ class Lucrare extends Obiect {
     }
     public function addCitare($citare) {
         aray_push($this->citari,$citare->asArray());
+    }
+    public function addLink($link) {
+        array_push($this->linkuri, $link);
     }
     public function getID() {
         return $this->id;

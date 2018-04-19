@@ -4,7 +4,7 @@
             <div class="col-xs-12" >
                 <div class="row">
                     <div class="col-xs-8">
-                        <h3>Lucrarile autorului <?=App::$app->user->getName()?></h3>
+                        <h3>Lucrările autorului <?=App::$app->user->getName()?></h3>
                     </div>
                 </div>
             </div>
@@ -20,6 +20,7 @@
                     <button ng-click="reverse = false" ng-class="{'btn btn-success':reverse!=true, 'btn btn-default':reverse==true}"><span class="glyphicon glyphicon-arrow-up"></span></button> 
                     <button ng-click="reverse = true" ng-class="{'btn btn-success':reverse==true, 'btn btn-default':reverse!=true}"><span class="glyphicon glyphicon-arrow-down"></span></button>
                 </p>
+                <p>{{lucrariFiltrate().length}} rezultate</p>
                 <table class="table-bordered table table-condensed" ng-show="lucrari.length>0">
                     <tr>
                         <th ng-show="vizibil.titlu">Titlu</th>
@@ -96,7 +97,8 @@
     </div>
 </div>
     <div class="col-md-3">
-        <p>Filtrare după text:<input type="text" ng-model="filtru" class="form-control" placeholder="Text"/></p>
+        <h4>Filtrare</h4>
+        <p>După text:<input type="text" ng-model="filtru" class="form-control" placeholder="Text"/></p>
         <p>Ultimii x ani:<input type="number" ng-model="filtruAni" class="form-control" placeholder="Ultimii x ani"/></p>
         <p><small>{{anMinim}}</small> <a class="pull-right" ng-click="resetFiltrare()">Reset</a></p>
         <hr/>
@@ -106,13 +108,16 @@
             </select>
         </p>
         <hr/>
-        <h6>Coloane vizibile</h6>
+        <h4>Coloane vizibile</h4>
         <p><input type="checkbox" ng-model="vizibil.titlu"/> Titlu</p>
         <p><input type="checkbox" ng-model="vizibil.autori"/> Autori</p>
         <p><input type="checkbox" ng-model="vizibil.anPublicare"/> An publicare</p>
         <p><input type="checkbox" ng-model="vizibil.indexare"/> Indexare</p>
         <p><input type="checkbox" ng-model="vizibil.linkuri"/> Linkuri</p>
         <p><input type="checkbox" ng-model="vizibil.actiuni"/> Actiuni</p>
+        <hr/>
+        <h4>Descărcări</h4>
+        <button class="form-control btn btn-success" ng-click="descarcaCSV()">CSV</button>
     </div>
 </div> 
 
@@ -130,7 +135,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.propertyName = 'anulPublicarii';
     $scope.formatNume = '1';
     $scope.optiuniFormatNume = formatNume;
-    $scope.reverse = false;
+    $scope.reverse = true;
     $scope.options ={ //optiuni pentru chart.js
         scales: {
             yAxes: [{
@@ -287,13 +292,40 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             if($scope.filtru.length!=0) var filtru = $scope.filtru;
             else var filtru = null;
             return $scope.lucrari.filter(function(lucrare){
-                return ((lucrare.titlu.indexOf(filtru) != -1 ||
-                    lucrare.abstract.indexOf(filtru) != -1 ||
-                    lucrare.volum.indexOf(filtru) != -1) &&
-                    Number(lucrare.anulPublicarii) >= Number(anMinim)
-                );
+                if(filtru) {
+                    return ((lucrare.titlu.toLowerCase().indexOf(filtru) != -1 ||
+                        lucrare.abstract.indexOf(filtru) != -1 ||
+                        lucrare.volum.indexOf(filtru) != -1) &&
+                        Number(lucrare.anulPublicarii) >= Number(anMinim)
+                    );
+                } else {
+                    return (Number(lucrare.anulPublicarii) >= Number(anMinim));
+                }
             });
         };
+        
+        $scope.descarcaCSV = function() {
+            //https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+            var v = $scope.vizibil;
+            var csv = "data:text/csv;charset=utf-8,"; //csv data
+            $scope.lucrariFiltrate().forEach(function(lucrare){ //lucrari to csv row
+                let row = "";
+                
+                if(v.titlu) row += '"'+lucrare.titlu+'"';
+                if(v.autori) row += ',"'+$scope.autori(lucrare.id)+'"';
+                if(v.anPublicare) row += ',"'+lucrare.anulPublicarii+'"';
+                if(v.indexare) row += ',"'+$scope.getIndexareText(lucrare.indexare)+'"';
+                
+                csv += row + "\r\n";
+            });
+            var encURI = encodeURI(csv);
+            var link = document.createElement("a"); //generate button
+            link.setAttribute("href", encURI);
+            link.setAttribute("download", "tabel.csv");
+            document.body.appendChild(link); // Required for FF
+            link.click(); // This will download the data file named "tabel.csv".
+        };
+        
         
         $scope.$apply(function(){
             $scope.getAutorName($scope.myId);
