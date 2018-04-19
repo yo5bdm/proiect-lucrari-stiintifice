@@ -27,72 +27,15 @@
                         <th ng-show="vizibil.autori">Autori</th>
                         <th ng-show="vizibil.anPublicare">An publicare</th>
                         <th ng-show="vizibil.indexare">Indexare</th>
-                        <th ng-show="vizibil.linkuri">Linkuri</th>
-                        <th ng-show="vizibil.actiuni">Actiuni</th>
                     </tr>
                     <tr ng-repeat="x in lucrariFiltrate() | orderBy:propertyName:reverse">
-                        <td  ng-show="vizibil.titlu" ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">{{x.titlu}}</td>
+                        <td  ng-show="vizibil.titlu" ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal"><a href="<?=Helpers::generateUrl(['c'=>'lucrari','a'=>'view'])?>/{{x.id}}">{{x.titlu}}</a></td>
                         <td ng-show="vizibil.autori">{{autori(x.id)}}</td>
                         <td ng-show="vizibil.anPublicare">{{x.anulPublicarii}}</td>
                         <td ng-show="vizibil.indexare">{{getIndexareText(x.indexare)}}</td>
-                        <td ng-show="vizibil.linkuri"><a href='{{x.link}}'>Remote</a> <a href='{{x.linkLocal}}'>Local</a></td>
-                        <td ng-show="vizibil.actiuni">
-                            <a ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal"><span title="Vizualizeaza" class="glyphicon glyphicon-zoom-in"></span></a>&nbsp;
-                            <a ng-click="editeaza(x.id)"><span title="Editeaza" class="glyphicon glyphicon-wrench"></span></a>&nbsp;
-                            <a ng-click="sterge(x.id)"><span title="Sterge" class="glyphicon glyphicon-remove"></span></a>
-                        </td>
                     </tr>
                     
                 </table>
-
-        <!-- Modal -->
-            <div id="myModal" class="modal fade" role="dialog">
-              <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">{{md.titlu}}</h4>
-                    </div>
-                        <div class="modal-body">
-                        <p>Autori: {{autori(md.id)}}</p>
-                        <p>Indexare {{getIndexareText(md.indexare)}}</p>
-                        <hr>
-                        <p>{{md.abstract}}</p>
-                        <hr>
-                        <p>{{getText(md.volum,'Volumul')}} {{getText(md.pagini,'Pag')}}</p>
-                        <p>Publicat in {{md.anulPublicarii}}</p>
-                        <p>{{getText(md.conferinta,'Conferinta')}}</p>
-                        <p>Linkuri lucrare 
-                            <a href='{{md.link}}'>REMOTE</a>, 
-                            <a href='{{md.linkLocal}}'>LOCAL</a>
-                        </p>
-                        <p>Citări:</p>
-                        <canvas id="bar" 
-                                class="chart chart-bar" 
-                                chart-options="options"
-                                chart-data="data" 
-                                chart-labels="labels"> 
-                                    chart-series="series"
-                        </canvas>
-                        <ul class="list-group">
-                            <li class="list-group-item" ng-repeat="c in md.citari">
-                                {{c.descriere}}<br/>
-                                {{c.an}}, 
-                                Linkuri 
-                                <a href="{{c.urlLocal}}">LOCAL</a>, 
-                                <a href="{{c.urlRemote}}">REMOTE</a>
-                            </li>
-                        </ul>
-                        
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -113,8 +56,6 @@
         <p><input type="checkbox" ng-model="vizibil.autori"/> Autori</p>
         <p><input type="checkbox" ng-model="vizibil.anPublicare"/> An publicare</p>
         <p><input type="checkbox" ng-model="vizibil.indexare"/> Indexare</p>
-        <p><input type="checkbox" ng-model="vizibil.linkuri"/> Linkuri</p>
-        <p><input type="checkbox" ng-model="vizibil.actiuni"/> Actiuni</p>
         <hr/>
         <h4>Descărcări</h4>
         <button class="form-control btn btn-success" ng-click="descarcaCSV()">CSV</button>
@@ -122,15 +63,13 @@
 </div> 
 
 <script type="text/javascript">
-var app = angular.module("myApp", ['chart.js']);
+var app = angular.module("myApp", []);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.vizibil ={
         titlu:true,
         autori:true,
         anPublicare:true,
-        indexare:true,
-        linkuri:false,
-        actiuni:true
+        indexare:true
     };
     $scope.propertyName = 'anulPublicarii';
     $scope.formatNume = '1';
@@ -185,42 +124,6 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         $scope.getAutori(),
         $scope.getIndexari()
     ]).then(function(data){
-        $scope.labels = []; //http://www.chartjs.org/docs/latest/
-        $scope.data = [];   //http://jtblin.github.io/angular-chart.js/
-        $scope.graphData = function() {
-            //$scope.md - aici e lucrarea
-            var min = $scope.getMinYear();
-            var max = $scope.getMaxYear();
-            $scope.labels = []; //clear old data
-            $scope.data = [];
-            for(var i=min;i<=max;i++) { //insert new data
-                $scope.labels.push(Number(i));
-                $scope.data.push($scope.countYear(Number(i)));
-            }
-        };
-        $scope.getMinYear = function() {
-            var year = 9999;
-            for(var i=0;i<$scope.md.citari.length;i++) {
-                if(Number($scope.md.citari[i].an) < year) year = Number($scope.md.citari[i].an);
-            }
-            if(year!=9999) return year;
-            else return 0; //nu am gasit nimic
-        };
-        $scope.getMaxYear = function() {
-            var year = 0;
-            for(var i=0;i<$scope.md.citari.length;i++) {
-                if(Number($scope.md.citari[i].an) > year) year = Number($scope.md.citari[i].an);
-            }
-            return year; //nu am gasit nimic
-        };
-        $scope.countYear = function(year) {
-            var ret = 0;
-            for(var i=0;i<$scope.md.citari.length;i++) {
-                if(Number($scope.md.citari[i].an) == year) ret++;
-            }
-            return ret;
-        };
-        
         $scope.getLucrare = function(ids) {
             var lucrare;
             for(var i=0;i<$scope.lucrari.length;i++) {
@@ -255,24 +158,6 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         };
         $scope.getIndexareText = function(ids) {
             if(ids) return $scope.json.indexari.find(ind => Number(ind.id) === Number(ids) ).denumire;
-        };
-            
-        $scope.modal = function(id) {
-            $scope.currentId = id;
-            $scope.md = $scope.getLucrare(id);
-            $scope.graphData();
-        };
-        $scope.editeaza = function(ids) {
-            window.location.href = '<?=Helpers::generateUrl(["c"=>"lucrari","a"=>"edit"])?>/'+ids;
-        };
-        $scope.sterge = function(ids) {
-            if(confirm("Sunteti sigur ca doriti sa stergeti inregistrarea "+ids+"?")) {
-                $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"stergelucrarea"])?>/'+ids).then(function(response){
-                    $scope.getLucrari();
-                    $scope.getAutori();
-                }); 
-            }
-            
         };
         
         $scope.lucrariFiltrate = function() {
