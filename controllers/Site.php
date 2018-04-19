@@ -55,4 +55,8 @@ class Site extends Controller {
     protected function profil() {
         
     }
+    
+    public function autor($id) {
+        $this->setData(['idAutor'=>$id]);
+    }
 }

@@ -25,6 +25,7 @@ class Settings {
         'angular.min',
         'jquery-3.3.1.min',
         'functii',
+        'clase',
         'angular-chart.min'
         //'typeahead.bundle'
     );

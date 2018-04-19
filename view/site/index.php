@@ -1,15 +1,13 @@
+<script data-require="ui-bootstrap@*" data-semver="0.12.1" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
     <div class="col-xs-12" >
         <h2 class="text-center"><?=App::$app->settings->numeAplicatie?></h2>
         <p ng-show="interogare==false">&nbsp</p>
-        <div class="input-group">
+        <div>
             <input ng-model="interogareText" 
                    ng-model-options="{ getterSetter: true }"
                    class="form-control" 
-                   placeholder="Caută lucrare, autor, grup [DE IMPLEMENTAT]" />
-            <span class="input-group-btn">
-              <button class="btn btn-default" ng-click="interogheaza()" type="button">Caută</button>
-            </span>
+                   placeholder="Caută lucrare, autor, grup" />
         </div>
     </div>
     
@@ -19,43 +17,63 @@
     </div>
     
     <div class="col-xs-12" ng-show="interogare==true">
-        
-        <div class="row"> 
-            <div class="col-xs-12">
-                <hr>
-                <p>Lucrări:</p>
-                <ul class="list-group"> <!-- START afisare lucrari gasite -->
-                    <li class="list-group-item" ng-repeat="x in lucrariFiltrate = (lucrari | filter: interogareText)">
-                        <div ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal">
-                            <h3>"{{x.titlu}}" <small>{{autori(x.id)}}</small></h3>
-                            <p>Anul publicarii {{x.anulPublicarii}}; </p>
-                            <p>Citat de {{x.citari.length}} ori; Linkuri <a href='{{x.link}}'>REMOTE</a>; <a href='{{x.linkLocal}}'>LOCAL</a></p>
-                        </div>
-                    </li>
-                    <li class="list-group-item" ng-hide="lucrariFiltrate.length">Nu există lucrări corespunzătoare acestui filtru.</li>
-                </ul> <!-- END afisare lucrari gasite -->        
-        
-        
+        <hr/>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#lucrari">Lucrari ({{lucrariFiltrateNP.length}})</a></li>
+            <li><a data-toggle="tab" href="#autori">Autori</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="lucrari" class="tab-pane fade in active">
+                <div class="row"> 
+                    <div class="col-xs-12">
+                        <pagination
+                        ng-model="curPage"
+                        total-items="lucrariFiltrateNP.length"
+                        max-size="maxSize"
+                        boundary-links="true">
+                        </pagination>
+                        <table class="table table-bordered table-condensed">
+                            <tr ng-hide="lucrariFiltrate.length">
+                                <td><p>Nu există rezultate pentru filtrul curent</p></td>
+                            </tr>
+                            <tr ng-repeat="x in lucrariFiltrate">
+                                <td><strong>{{x.titlu}}</strong></td>
+                                <td>{{autori(x.id)}}</td>
+                                <td>{{x.anulPublicarii}}</td>
+                            </tr>
+                        </table> <!-- END afisare lucrari gasite -->        
+                    
+
+                    </div>
+                </div> 
             </div>
-        </div> 
-        <div class="row">
-            <div class="col-md-4"><!-- START afisare autori gasiti -->
-                <hr>
-                <p>Autori:</p>
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="x in autoriFiltru = (json.autori | filter:interogareText)">
-                        <h4>{{x.functia}} {{x.nume}} {{x.prenume}}</h4>
-                        <p>Lucrari publicate: </p>
-                    </li>
-                </ul>
-            </div> <!-- END afisare autori gasiti -->
-            <div class="col-md-4"> <!-- START afisare grupuri, etc -->
-                &nbsp;
-            </div> <!-- END afisare grupuri, etc -->
-            <div class="col-md-4">
-                &nbsp;
+            <div id="autori" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-4"><!-- START afisare autori gasiti -->
+                        <hr>
+                        <p>Autori:</p>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="x in autoriFiltru = (json.autori | filter:interogareText)">
+                                <h4>{{x.functia}} {{x.nume}} {{x.prenume}}</h4>
+                                <p>Lucrari publicate: </p>
+                            </li>
+                        </ul>
+                    </div> <!-- END afisare autori gasiti -->
+                    <div class="col-md-4"> <!-- START afisare grupuri, etc -->
+                        &nbsp;
+                    </div> <!-- END afisare grupuri, etc -->
+                    <div class="col-md-4">
+                        &nbsp;
+                    </div>
+                </div>
             </div>
         </div>
+        
+        
+        
+        
+        
+        
     </div>
     
 <!-- Modal -->
@@ -102,8 +120,14 @@
 
 
 <script type="text/javascript">
-var app = angular.module("myApp", ['chart.js']);
+var app = angular.module("myApp", ['chart.js','ui.bootstrap']);
 app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
+    $scope.lucrariFiltrate = [];
+    $scope.curPage = 1;
+    $scope.numPerPage=10;
+    $scope.maxSize = 5;
+    $scope.lucrariFiltrateNP = []; //nepaginate
+            
     $scope.interogare = false;
     $scope.interogareText = "";
     $scope.controlShow = function() {
@@ -112,9 +136,6 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         } else {
             $scope.interogare = true;
         }
-    }
-    $scope.interogheaza = function() {
-        $scope.controlShow();
     };
     
     $scope.json={};
@@ -229,6 +250,19 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             $scope.md = $scope.getLucrare(id);
             $scope.graphData();
         };
+        
+        $scope.update = function () {
+            var begin = (($scope.curPage - 1) * $scope.numPerPage),
+            end = begin + $scope.numPerPage;
+            $scope.lucrariFiltrateNP = $scope.lucrari.filter(function(lucrare){
+                return lucrare.titlu.toLowerCase().indexOf($scope.interogareText)!=-1;
+            });
+            $scope.lucrariFiltrate = $scope.lucrariFiltrateNP.slice(begin, end);
+        };
+        $scope.$watch('curPage + interogareText',function(){
+            $scope.controlShow();
+            $scope.update();
+        });
         $scope.$apply(function(){
             $scope.getAutorName($scope.myId);
             $scope.controlShow();

@@ -29,6 +29,3 @@ function afiseazaNume(nume, prenume, format) {
     }
     
 }
-
-
-

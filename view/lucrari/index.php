@@ -4,7 +4,7 @@
             <div class="col-xs-12" >
                 <div class="row">
                     <div class="col-xs-8">
-                        <h3>Lucrarile utilizatorului <?=App::$app->user->getName()?></h3>
+                        <h3>Lucrarile autorului <?=App::$app->user->getName()?></h3>
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.propertyName = 'anulPublicarii';
     $scope.formatNume = '1';
     $scope.optiuniFormatNume = formatNume;
-    $scope.reverse = true;
+    $scope.reverse = false;
     $scope.options ={ //optiuni pentru chart.js
         scales: {
             yAxes: [{
@@ -263,7 +263,6 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         $scope.sterge = function(ids) {
             if(confirm("Sunteti sigur ca doriti sa stergeti inregistrarea "+ids+"?")) {
                 $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"stergelucrarea"])?>/'+ids).then(function(response){
-                    console.log(response.data);
                     $scope.getLucrari();
                     $scope.getAutori();
                 }); 

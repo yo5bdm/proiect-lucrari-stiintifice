@@ -41,7 +41,6 @@ class App {
         } else {
             $this->havePost = false;
         }
-        
         $contr = new $this->route->controller(); //instantiaza controllerul selectat
         $ac = $this->route->action;
         $contr->$ac($this->route->id,$this->route->parametrii); //executa actiunea selectata

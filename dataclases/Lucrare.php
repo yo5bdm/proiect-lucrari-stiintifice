@@ -9,6 +9,7 @@ class Lucrare extends Obiect {
     private $id;
     public $titlu;
     public $autori=array();
+    public $keywords;
     public $bazededate = array();
     public $abstract;
     public $indexare;
@@ -17,6 +18,7 @@ class Lucrare extends Obiect {
     public $conferinta;
     public $anulPublicarii;
     public $link;
+    public $linkuri = array();
     public $linkLocal;
     public $citari=array();
     

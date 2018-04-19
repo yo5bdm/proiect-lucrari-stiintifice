@@ -1,22 +1,26 @@
-- posibilitate de-a ordona lucrarile dupa tipul indexarii
-ISI - cea mai tare
-ISI proc
-BDI - baze de date indexate
-- pe pagina de lucrari si principala - ordonare dupa tipul indexarii
-
+- la articole keywords!!
+                linkuri (array) nu link simplu la partea remote
+- ascundere link local daca nu exista.
 
 - view autor
+- view lucrare
 
+- export csv pentru lista de lucrari (https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
 
-Users <- Grupuri <- Departamente <- Facultati
+- pagina de view articol cu delete si edit (eliminare actiuni din lista)
 
+cautare: 
+    - extended search: campurile separate (an, autor, etc, departament)
+    - posibilitate de export
+    
 Documente de iesire posibile:
-- lista lucrarilor unei persoane din toti anii (ordine: an descrescat)
-- lista lucrarilor unei persoane din ultimii N ani (frecvent N=1,5 sau 10)
-- lista lucrarilor unei persoane din ultimii N ani grupate pe ISI/ISI proc/BDI/-
-- lista lucrarilor unui //colectiv din ultimii N ani grupate pe ISI/ISI proc/BDI/-
+- lista ... cu numarul de citari
 - sinteza lucrarilor / colective/departamente.. cate ISI / ISI proc / ISI BDI
 - lista ... cu bazele de date care au indexat articolele respective
-- lista ... cu numarul de citari
+
 - lista ... cu citarile aferente
 - etc..
+
+planificare versus raport activitate - la proiect
+raport activitate pune fiecare ce a facut
+documentarea aplicatiei

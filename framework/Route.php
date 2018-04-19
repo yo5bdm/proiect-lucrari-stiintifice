@@ -54,8 +54,13 @@ class Route {
         /* scoatem folderul in care e aplicatia din request si intoarcem 
          * restul elementelor ca array(controller, action, id, etc)
          */
+        $ret = array();
         $uri = str_replace(App::$app->settings->appFolder,'',$_SERVER['REQUEST_URI']);
-        return explode('/',$uri);
+        $ret = explode('/',$uri);
+        if(count($ret)==1 && strlen($ret[0])==0) {
+            $ret = array();
+        }
+        return $ret;
     }
     
 }

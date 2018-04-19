@@ -9,7 +9,7 @@
                 <h3 class="card-title text-center">Adauga o lucrare noua</h3>
             </div>
             <div class="panel-body">
-                <p><input name="titlu" ng-model="lucrare.titlu" placeholder="Titlu" class="form-control" type="text"></p>
+                <p><input required="required" name="titlu" ng-model="lucrare.titlu" placeholder="Titlu" class="form-control" type="text"></p>
                 <p></p>
                 <div class="input-group">
                     <select name="autori" ng-model="filtru.autori" class="form-control" placeholder="Autori" >
@@ -41,11 +41,11 @@
                 </p>
                 <p><button data-toggle="modal" data-target="#myModal2" class="form-control btn btn-default">Adaugă bază de date</button></p>
                 <hr/>
-                <p><textarea placeholder="Abstract" class="form-control" rows="6" name="abstract" ng-model="lucrare.abstract"></textarea></p>
+                <p><textarea required="required" placeholder="Abstract" class="form-control" rows="6" name="abstract" ng-model="lucrare.abstract"></textarea></p>
                 <p><input name="volum" ng-model="lucrare.volum" placeholder="Volum" class="form-control" type="text"></p>
                 <p><input name="pagini" ng-model="lucrare.pagini" placeholder="Pagini" class="form-control" type="text"></p>
                 <p><input name="conferinta" ng-model="lucrare.conferinta" placeholder="Conferinta" class="form-control" type="text"></p>
-                <p><input type="number" name="anulPublicarii" ng-model="lucrare.anulPublicarii" placeholder="AnulPublicarii" class="form-control" type="text"></p>
+                <p><input required="required" type="text" name="anulPublicarii" ng-model="lucrare.anulPublicarii" placeholder="AnulPublicarii" class="form-control" type="text"></p>
                 <p><input name="link" ng-model="lucrare.link" placeholder="Link" class="form-control" type="text"></p>
                 <p><input name="linkLocal" ng-model="lucrare.linkLocal" placeholder="LinkLocal" class="form-control" type="text"></p>
                 <hr/>
@@ -131,15 +131,17 @@ app.controller("myCtrl", ['$scope','$http','$timeout', function($scope,$http,$ti
     $scope.lucrare = {
         titlu:"",
         abstract:"",
-        indexare:'1',
+        indexare:'4',
+        keywords:"",
         volum:"",
         pagini:"",
         conferinta:"",
-        anulPublicarii:"",
+        anulPublicarii:<?=date('Y')?>,
         link:"",
         linkLocal:"",
         autori:[],
         citari:[],
+        linkuri:[],
         bazededate:[]   
     };
     $scope.citare = {
@@ -230,11 +232,11 @@ Promise.all([
         $scope.lucrare = {};
         $scope.lucrare.titlu="";
         $scope.lucrare.abstract="";
-        $scope.lucrare.indexare='1';
+        $scope.lucrare.indexare='4';
         $scope.lucrare.volum="";
         $scope.lucrare.pagini="";
         $scope.lucrare.conferinta="";
-        $scope.lucrare.anulPublicarii="";
+        $scope.lucrare.anulPublicarii=<?=date('Y')?>;
         $scope.lucrare.link="";
         $scope.lucrare.linkLocal="";
         $scope.lucrare.autori=[];
@@ -242,8 +244,8 @@ Promise.all([
         $scope.lucrare.bazededate=[];
     };
     $scope.salveaza = function() {
+        if(!$scope.validate()){ return; }
         $scope.saving = true;
-        
         var param = {
             datele:$scope.lucrare
         };
@@ -260,6 +262,30 @@ Promise.all([
             $timeout(function() { $scope.salvat=false; }, 3000);
             $scope.resetForm();
         });
+    };
+    $scope.validate = function() {
+        if($scope.lucrare.titlu.length===0) {
+            alert("Va rugam sa adaugati titlu la lucrare");
+            return false;
+        }
+        if($scope.lucrare.abstract.length===0) {
+            alert("Va rugam sa adaugati abstract la lucrare");
+            return false;
+        }
+        if($scope.lucrare.autori.length===0) {
+            alert("Va rugam sa adaugati cel putin un autor la lucrare");
+            return false;
+        }
+        if($scope.lucrare.anulPublicarii.length===0) {
+            alert("Va rugam sa adaugati anul publicarii la lucrare");
+            return false;
+        }
+        if(isNaN($scope.lucrare.anulPublicarii)) {
+            alert('Anul publicarii trebuie sa fie un numar');
+            return false;
+        }
+        $scope.lucrare.anulPublicarii = Number($scope.lucrare.anulPublicarii);
+        return true;
     };
 });
 }]);
