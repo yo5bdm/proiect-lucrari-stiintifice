@@ -1,4 +1,9 @@
 <script data-require="ui-bootstrap@*" data-semver="0.12.1" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
+<style type="text/css">
+ a:hover {
+  cursor:pointer;
+ }
+</style>
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
     <div ng-class="{'col-md-8':advanced, 'col-md-12':!advanced}" >
         <h2 class="text-center"><?=App::$app->settings->numeAplicatie?></h2>
@@ -37,13 +42,11 @@
                                     <td><p>Nu există rezultate pentru filtrul curent</p></td>
                                 </tr>
                                 <tr ng-repeat="x in lucrariFiltrate">
-                                    <td><strong>{{x.titlu}}</strong></td>
+                                    <td><a href="<?=Helpers::generateUrl(['c'=>'lucrari','a'=>'view'])?>/{{x.id}}">{{x.titlu}}</a></td>
                                     <td>{{autori(x.id)}}</td>
                                     <td>{{x.anulPublicarii}}</td>
                                 </tr>
                             </table> <!-- END afisare lucrari gasite -->        
-
-
                         </div>
                     </div> 
                 </div>
@@ -79,7 +82,9 @@
         <p><input ng-model="filtruAvansat.volum" class="form-control" placeholder="Volum"/></p>
         <p><input ng-model="filtruAvansat.conferinta" class="form-control" placeholder="Conferinta"/></p>
         <p><input ng-model="filtruAvansat.anulPublicarii" class="form-control" placeholder="Anul publicarii"/></p>
-        <a style="text-align: right;" ng-click="advanced=!advanced">Căutare {{advanced==true?'simplă':'avansată'}}</a>
+        <a style="text-align: right;" ng-click="advanced=!advanced">
+            Căutare {{advanced==true?'simplă':'avansată'}}
+        </a>
     </div>
     
 </div> <!-- END ng-app -->
@@ -108,6 +113,13 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.interogare = false;
     $scope.interogareText = "";
     $scope.controlShow = function() {
+        let f = $scope.filtruAvansat;
+        if(f.titlu.length!=0 || f.abstract.length != 0 || f.keywords.length!=0 ||
+                f.autor.length!=0 || f.volum.length!=0 || f.conferinta.length!=0 ||
+                f.anulPublicarii.length!=0) {
+            $scope.interogare = true;
+            return;
+        }
         if($scope.interogareText.length == 0) {
             $scope.interogare = false;
         } else {
@@ -183,6 +195,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
             end = begin + $scope.numPerPage;
             $scope.filtrare();
             $scope.lucrariFiltrate = $scope.lucrariFiltrateNP.slice(begin, end);
+            console.log($scope.lucrariFiltrateNP);
         };
         
         $scope.filtrare = function() {
@@ -194,17 +207,18 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
                 let f = $scope.filtruAvansat;
                 $scope.lucrariFiltrateNP = $scope.lucrari.filter(function(lucrare){
                     return (
-                        lucrare.titlu.toLowerCase().indexOf(f.titlu)!=-1 ||
-                        lucrare.abstract.toLowerCase().indexOf(f.abstract)!=-1
+                        lucrare.titlu.toLowerCase().indexOf(f.titlu)!=-1 &&
+                        lucrare.abstract.toLowerCase().indexOf(f.abstract)!=-1 &&
+                        Number(lucrare.anulPublicarii) == Number(f.anulPublicarii)
                             );
                 }); 
             }
         };
         
-        $scope.$watch('curPage + interogareText',function(){
+        $scope.$watch('curPage + interogareText + filtruAvansat.titlu + filtruAvansat.abstract + filtruAvansat.keywords + filtruAvansat.autor + filtruAvansat.volum + filtruAvansat.conferinta + filtruAvansat.anulPublicarii',function(){
             $scope.controlShow();
             $scope.update();
-        });
+        },true);
         $scope.$apply(function(){
             $scope.getAutorName($scope.myId);
             $scope.controlShow();

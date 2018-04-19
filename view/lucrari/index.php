@@ -29,7 +29,7 @@
                         <th ng-show="vizibil.indexare">Indexare</th>
                     </tr>
                     <tr ng-repeat="x in lucrariFiltrate() | orderBy:propertyName:reverse">
-                        <td  ng-show="vizibil.titlu" ng-click="modal(x.id)" data-toggle="modal" data-target="#myModal"><a href="<?=Helpers::generateUrl(['c'=>'lucrari','a'=>'view'])?>/{{x.id}}">{{x.titlu}}</a></td>
+                        <td  ng-show="vizibil.titlu"><a href="<?=Helpers::generateUrl(['c'=>'lucrari','a'=>'view'])?>/{{x.id}}">{{x.titlu}}</a></td>
                         <td ng-show="vizibil.autori">{{autori(x.id)}}</td>
                         <td ng-show="vizibil.anPublicare">{{x.anulPublicarii}}</td>
                         <td ng-show="vizibil.indexare">{{getIndexareText(x.indexare)}}</td>
