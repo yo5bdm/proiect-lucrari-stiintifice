@@ -11,6 +11,10 @@ class Json extends Controller {
         $date = new Date();
         $this->setData($date->getListaLucrari());
     }
+    public function toatelucrarile() {
+        $date = new Date();
+        $this->setData($date->getListaLucrari(true));
+    }
     public function getLucrare($id) {
         $date = new Date();
         $content = $date->userId(App::$app->user->getId())->getLucrarea($id);

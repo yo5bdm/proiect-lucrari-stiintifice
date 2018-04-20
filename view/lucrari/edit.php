@@ -9,6 +9,7 @@
             <div class="panel-body">
                 <p><input name="titlu" ng-model="lucrare.titlu" placeholder="Titlu" class="form-control" type="text"></p>
                 <p></p>
+                <p><input name="keywords" ng-model="lucrare.keywords" placeholder="Cuvinte cheie" class="form-control" type="text"/></p>
                 <div class="input-group">
                     <select name="autori" ng-model="filtru.autori" class="form-control" placeholder="Autori" >
                         <option ng-repeat="x in json.autori" value="{{x.id}}">{{x.nume + ' ' + x.prenume}}</option>
@@ -58,6 +59,16 @@
                     </ul>
                 </div>
                 <hr/>
+                <div>
+                    <button data-toggle="modal" data-target="#linkModal" class="form-control btn btn-default" type="button">Adauga link la lucrare</button>
+                    <ul class="list-group" >
+                        <li class="list-group-item" ng-repeat="x in lucrare.linkuri">
+                            <a href="{{x}}">Link {{$index}}</a>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Sterge linkul" ng-click="stergeLink($index)"></span>
+                        </li>
+                    </ul>
+                </div>
+                <hr/>
                 <p></p>
                 <p></p>
                 <button class="form-control btn btn-success" ng-click="salveaza()">Salveaza</button>
@@ -87,6 +98,28 @@
 
   </div>
 </div>
+
+<!-- MODAL ADAUGARE LINK -->
+<div id="linkModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Adauga link</h4>
+        </div>
+            <div class="modal-body">
+                <input class="form-control" ng-model="linkNou" placeholder="Link la lucrare" />
+            </div>
+        <div class="modal-footer">
+            <button class="form-control" ng-click="addLink()">Salvează</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Închide</button>
+        </div>
+    </div>
+
+  </div>
+</div>
+
    
 <!-- MODAL ADAUGARE Baze de date -->
 <div id="myModal2" class="modal fade" role="dialog">
@@ -142,6 +175,7 @@ app.controller("myCtrl", ['$scope','$http',function($scope,$http) {
         id:'1',
         link:""
     };
+    $scope.linkNou='';
     
     $scope.getAutori = function() {
         return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"getusers"])?>').then(function(response){
@@ -199,6 +233,14 @@ Promise.all([
         for(var i=0;i<autori.length;i++){
             if(autori[i].id==ids) return autori[i].nume+" "+autori[i].prenume;
         }
+    };
+    
+    $scope.addLink = function() {
+        $scope.lucrare.linkuri.push($scope.linkNou);
+        $scope.linkNou='';
+    };
+    $scope.stergeLink = function(index) {
+        $scope.lucrare.linkuri.splice(index,1);
     };
     
     $scope.getDBText = function(id) {

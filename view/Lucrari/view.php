@@ -7,25 +7,33 @@
         <div ng-show="md">
             <h2>{{md.titlu}}</h2>
             <h2><small>{{autori(md.id)}}</small></h2>
-            <p>Publicat in {{md.anulPublicarii}}</p>
+            <p><small>Cuvinte cheie: <strong><i>{{md.keywords}}</i></strong></small></p>
+            <p>Anul publicării: <strong>{{md.anulPublicarii}}</strong></p>
             <hr>
             <p>{{md.abstract}}</p>
             <hr>
-            <p>Indexare {{getIndexareText(md.indexare)}}</p>
-            <p>{{getText(md.volum,'Volumul')}} {{getText(md.pagini,'Pag')}}</p>
-
+            <p>Indexare <strong>{{getIndexareText(md.indexare)}}</strong>; {{getText(md.volum,'Volumul')}} {{getText(md.pagini,'Pag')}}</p>
             <p>{{getText(md.conferinta,'Conferinta')}}</p>
         </div>
     </div>
     <div class="col-md-4" ng-show="md">
-        <button ng-click="editeaza(md.id)" class="btn btn-success">Editează</button> 
-        <button ng-click="sterge(md.id)" class="btn btn-success">Șterge</button><br/>
+        <p><button ng-click="editeaza(md.id)" class="form-control btn btn-default">Editează</button></p>
+        <p><button ng-click="sterge(md.id)" class="form-control btn btn-default">Șterge</button></p>
+        <p><button data-toggle="modal" data-target="#modalCitare" class="form-control btn btn-default">Adaugă citare</button></p>
+        <p><button data-toggle="modal" data-target="#modalLink" class="form-control btn btn-default">Adaugă link remote la lucrare</button></p>
+        <p><button data-toggle="modal" data-target="#modalDB" class="form-control btn btn-default">Adaugă bază de date ce indexează lucrarea</button></p>
         <hr/>
-        <h4>Linkuri</h4>
-        <a ng-show="md.linkLocal.length" href='{{md.linkLocal}}'>LOCAL</a> 
-        <a ng-show="md.link.length" href='{{md.link}}'>REMOTE</a>
-        <h4>Citări:</h4>
-        <canvas id="bar" 
+        <h4 ng-show="md.linkLocal.length || md.linkuri.length">Linkuri</h4>
+        <ul class="list-group">
+            <li class="list-group-item" ng-show="md.linkLocal.length">
+                <a href='{{md.linkLocal}}'>Link Local</a>
+            </li>
+            <li class="list-group-item" ng-repeat="c in md.linkuri">
+                <a href="{{x}}">Link remote {{$index}}</a>
+            </li>
+        </ul>
+        <h4 ng-show="md.citari.length">Citări:</h4>
+        <canvas id="bar" ng-show="md.citari.length"
                 class="chart chart-bar" 
                 chart-options="options"
                 chart-data="data" 
@@ -40,8 +48,57 @@
                 <a ng-show="c.urlLocal.length" href="{{c.urlRemote}}">REMOTE</a>
             </li>
         </ul>
-        
     </div>
+    
+    <!-- MODAL ADAUGARE CITARE -->
+<div id="modalCitare" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Adauga citare</h4>
+        </div>
+            <div class="modal-body">
+                <?php 
+                    $form = new Form(new Citare());
+                    echo $form->setNgModel('citare')->setAllRequired(false)->generate();
+                ?>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" ng-click="addCitare()">Salvează</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Închide</button>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL ADAUGARE Baze de date -->
+<div id="modalDB" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Bază de date ce indexează lucrarea</h4>
+        </div>
+        <div class="modal-body">
+            <select class="form-control" ng-model="bazadedate.id">
+                <option ng-repeat="x in json.bazededate" value="{{x.id}}">{{x.denumire}}</option>
+            </select> <br/>
+            <input type="text" class="form-control" ng-model="bazadedate.link" placeholder="Link"/>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" ng-click="addDB()">Salvează</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Închide</button>
+        </div>
+    </div>
+
+  </div>
+</div>
+    
+    
 </div>
 <script type="text/javascript">
 var app = angular.module("myApp", ['chart.js']);
@@ -50,7 +107,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
     $scope.json = {};
     $scope.md = null;
     $scope.getLucrari = function() { 
-        return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"utilizator","id"=>App::$app->user->getId()])?>').then(function(response){
+        return $http.get('<?=Helpers::generateUrl(["c"=>"json","a"=>"toatelucrarile","id"=>App::$app->user->getId()])?>').then(function(response){
             $scope.json.lucrari = response.data;
         }); 
     };
@@ -109,12 +166,11 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         
         $scope.getAutorName = function(ids) {
             var listaAutori = $scope.json.autori;
-            for(var i=0; i<listaAutori.length; i++) {
-                if(listaAutori[i].id == Number(ids)) 
-                    return afiseazaNume(listaAutori[i].nume,listaAutori[i].prenume,$scope.formatNume);
-            }
-            return ids;
+            var autor = $scope.json.autori.find(aut=>{return aut.id == ids;});
+            if(autor) return afiseazaNume(autor.nume,autor.prenume,0);
+            else return ids;
         };
+        
         $scope.autori = function(ids) {
             var ret ="";
             var lucrare = $scope.json.lucrari.find(lucrare=>{return lucrare.id==ids;});
@@ -123,7 +179,6 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
                 ret += $scope.getAutorName(lucrare.autori[i]);
                 if(i<lucrare.autori.length-1) ret +=", ";
             }
-            console.log(ret);
             return ret;
         };
         $scope.getText = function(text,add) {

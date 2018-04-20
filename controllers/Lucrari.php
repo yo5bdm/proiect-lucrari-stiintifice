@@ -8,7 +8,7 @@
 
 class Lucrari extends Controller {
     
-    public $permissions = array( //metodele protejate prin login;
+    public $permissions = array( //metodele protejate prin login; trebuie sa fie protected
         'add', 'edit', 'delete', 'index'
     );
     
@@ -20,8 +20,7 @@ class Lucrari extends Controller {
         
     }
     
-    protected function view($id) {
-        //$modelDate = new Date();
+    public function view($id) {
         $this->setData(['id'=>$id]);
     }
     
@@ -29,10 +28,4 @@ class Lucrari extends Controller {
         $this->setData(['id'=>$id]);
     }
     
-    protected function delete($id) {
-        if(App::$app->isPost()) { 
-            
-        }
-        else $this->redirect (["c"=>"lucrari","a"=>"index"]);
-    }
 }

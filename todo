@@ -4,6 +4,8 @@
 
 - view autor
 - view lucrare
+    - adaugare citare
+    - adaugare baza de date care a indexat lucrarea
 
 
 - pagina de view articol cu delete si edit (eliminare actiuni din lista)

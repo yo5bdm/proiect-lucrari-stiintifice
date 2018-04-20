@@ -19,8 +19,8 @@ class Date extends Model {
         }
         return $id+1;
     }    
-    public function getListaLucrari() {
-        if($this->userId != null) {
+    public function getListaLucrari($all = false) {
+        if($this->userId != null && $all == false) {
             //filtreaza dupa id
             $lucrari = array();
             foreach($this->data['Date']['Lucrari'] as $lucrare) {
@@ -121,6 +121,7 @@ class Date extends Model {
         $vars = array(
             'titlu',
             'autori',
+            'keywords',
             'abstract',
             'bazededate',
             'indexare',

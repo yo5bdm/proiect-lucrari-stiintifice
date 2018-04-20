@@ -180,7 +180,8 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
                 if(filtru) {
                     return ((lucrare.titlu.toLowerCase().indexOf(filtru) != -1 ||
                         lucrare.abstract.indexOf(filtru) != -1 ||
-                        lucrare.volum.indexOf(filtru) != -1) &&
+                        lucrare.volum.indexOf(filtru) != -1 ||
+                        lucrare.keywords.indexOf(filtru) != -1 ) &&
                         Number(lucrare.anulPublicarii) >= Number(anMinim)
                     );
                 } else {
