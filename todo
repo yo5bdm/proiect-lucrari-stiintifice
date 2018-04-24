@@ -1,14 +1,4 @@
-- la articole keywords!!
-                linkuri (array) nu link simplu la partea remote
-- ascundere link local daca nu exista.
-
 - view autor
-- view lucrare
-    - adaugare citare
-    - adaugare baza de date care a indexat lucrarea
-
-
-- pagina de view articol cu delete si edit (eliminare actiuni din lista)
 
 cautare: 
     - extended search: campurile separate (an, autor, etc, departament)

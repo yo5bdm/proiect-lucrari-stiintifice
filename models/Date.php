@@ -129,7 +129,7 @@ class Date extends Model {
             'pagini',
             'conferinta',
             'anulPublicarii',
-            'link',
+            'linkuri',
             'linkLocal',
             'citari'
         );

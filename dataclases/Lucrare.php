@@ -17,7 +17,6 @@ class Lucrare extends Obiect {
     public $pagini;
     public $conferinta;
     public $anulPublicarii;
-    public $link;
     public $linkuri = array();
     public $linkLocal;
     public $citari=array();
