@@ -28,7 +28,11 @@ class Obiect {
     public function fromArray($arr) {
         $vars = get_object_vars($this);
         foreach($vars as $nume => $valoare) {
-            $this->$nume = $arr[$nume];
+            if(array_key_exists($nume, $arr)) {
+                $this->$nume = $arr[$nume];
+            } else {
+                $this->$nume = '';
+            }
         }
     }
 }

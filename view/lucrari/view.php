@@ -15,14 +15,15 @@
         </div>
         <div ng-show="md">
             <h2>{{md.titlu}}</h2>
-            <h2><small>{{autori(md.id)}}</small></h2>
+            <h2><small><a ng-repeat="x in aut = autori(md.id)" href="<?=Helpers::generateUrl(["c"=>"site","a"=>"autor"])?>/x.id">{{x.nume+" "+x.prenume}}<span ng-show="$index<(aut.length-1)">,&nbsp;</span></a></small></h2>
+            <!--   {autori(md.id)}    -->
             <p><small>Cuvinte cheie: <strong><i>{{md.keywords}}</i></strong></small></p>
             <p>Anul publicării: <strong>{{md.anulPublicarii}}</strong></p>
+            <p>Indexare <strong>{{getIndexareText(md.indexare)}}</strong>; {{getText(md.volum,'Volumul')}} {{getText(md.pagini,'Pag')}}</p>
+            <p>{{getText(md.conferinta,'Conferinta')}}</p>
             <hr>
             <p>{{md.abstract}}</p>
             <hr>
-            <p>Indexare <strong>{{getIndexareText(md.indexare)}}</strong>; {{getText(md.volum,'Volumul')}} {{getText(md.pagini,'Pag')}}</p>
-            <p>{{getText(md.conferinta,'Conferinta')}}</p>
         </div>
     </div>
     <div class="col-md-4" ng-show="md">
@@ -69,10 +70,9 @@
         </canvas>
         <ul class="list-group">
             <li class="list-group-item" ng-repeat="c in md.citari">
-                {{c.descriere}}<br/>
-                {{c.an}}
-                <a ng-show="c.urlLocal.length" href="{{c.urlLocal}}">LOCAL</a> 
-                <a ng-show="c.urlLocal.length" href="{{c.urlRemote}}">REMOTE</a>
+                {{c.an}} - {{c.descriere}} 
+                <a ng-show="c.urlLocal.length" href="{{c.urlLocal}}">Local</a> 
+                <a ng-show="c.urlRemote.length" href="{{c.urlRemote}}">Remote</a>
                 <span class="glyphicon glyphicon-remove pull-right" title="Sterge selectia" ng-click="stergeCitarea($index)"></span>
             </li>
         </ul>
@@ -151,7 +151,7 @@
 </div>
 <script type="text/javascript">
 var app = angular.module("myApp", ['chart.js']);
-app.controller("myCtrl", ['$scope','$http','$timeout', function($scope,$http,$timeout) {
+app.controller("myCtrl", ['$scope','$http','$timeout','$window', function($scope,$http,$timeout,$window) {
     $scope.lucrareCurenta = <?=$this->data['id']?>;
     $scope.modificari = false;
     $scope.salvat = false;
@@ -189,6 +189,18 @@ app.controller("myCtrl", ['$scope','$http','$timeout', function($scope,$http,$ti
             $scope.json.bazededate = response.data;
         }); 
     };
+    
+    
+    $scope.onExit = function(){
+        if($scope.modificari) {
+            if(confirm("Aveți modificări nesalvate, sigur părăsiți pagina?")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+    $window.onbeforeunload = $scope.onExit;
     
     Promise.all([
         $scope.getLucrari(),
@@ -239,17 +251,17 @@ app.controller("myCtrl", ['$scope','$http','$timeout', function($scope,$http,$ti
             if(autor) return afiseazaNume(autor.nume,autor.prenume,0);
             else return ids;
         };
-        
         $scope.autori = function(ids) {
-            var ret ="";
+            var ret = [];
             var lucrare = $scope.json.lucrari.find(lucrare=>{return lucrare.id==ids;});
             if(lucrare == null) return ret;
             for(var i=0;i<lucrare.autori.length;i++) {
-                ret += $scope.getAutorName(lucrare.autori[i]);
-                if(i<lucrare.autori.length-1) ret +=", ";
+                let idul = lucrare.autori[i];
+                ret.push($scope.json.autori.find(autor=>autor.id==idul));
             }
             return ret;
         };
+        
         $scope.getText = function(text,add) {
             if(text == null || text.length == 0) return "";
             else return add+" "+text;

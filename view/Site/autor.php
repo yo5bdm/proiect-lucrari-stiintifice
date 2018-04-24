@@ -1,24 +1,21 @@
 <?php
-
 /* 
  * Copyright Erdei Rudolf (www.erdeirudolf.com) - All rights reserved.
  * Code available under the GPL V2 license terms and conditions
  */
-
-//id autor $this->data['idAutor'];
 ?>
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
     <div class="col-md-8">
-        <h4>{{autor().nume+" "+autor().prenume}}</h4>
-        <p>Email: {{autor().email}}</p>
+        <h4>{{autor.functia}} {{autor.nume+" "+autor.prenume}}</h4>
+        <p>Email: {{autor.email}}</p>
         <hr/>
         <h4>Lucrari publicate:</h4>
         <table class="table table-bordered table-condensed">
-            <tr>
-                <th>Capul de tabel</th>
+            <tr ng-hide="lucrari().length">
+                <td>Utilizatorul nu are lucrări publicate în baza de date</td>
             </tr>
             <tr ng-repeat="x in lucrari()">
-                <td>{{x.titlu}}</td>
+                <td><a href="<?=Helpers::generateUrl(["c"=>"lucrari","a"=>"view"])?>/{{x.id}}">{{x.titlu}}</a></td>
             </tr>
         </table>
     </div>
@@ -54,11 +51,7 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         $scope.getUnitate()
     ]).then(function(){
         console.log($scope.json);
-        $scope.autor = function(){
-            return $scope.json.autori.find(function(autor){
-                return autor.id == $scope.viewAutorId;
-            });
-        };
+        $scope.autor = $scope.json.autori.find(autor=>Number(autor.id)===Number($scope.viewAutorId));
         $scope.lucrari = function() {
             if(!$scope.json.lucrari) return undefined;
             return $scope.json.lucrari.filter(function(lucrare){
@@ -70,5 +63,4 @@ app.controller("myCtrl", ['$scope','$http', function($scope,$http) {
         });
     });
 }]);
-
 </script>
